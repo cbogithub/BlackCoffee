@@ -1,0 +1,216 @@
+2016-12-01 20:53:40 [41] INFO Log create success
+2016-12-01 20:53:40 [42] INFO ipList is done...
+2016-12-01 20:53:52 [70] WARNING There is no content, see you later, honey........
+'NoneType' object has no attribute 'findAll'
+2016-12-01 20:55:07 [41] INFO Log create success
+2016-12-01 20:57:37 [41] INFO Log create success
+2016-12-01 20:58:33 [41] INFO Log create success
+2016-12-01 20:59:54 [68] WARNING false!!!!!!! 
+slice indices must be integers or None or have an __index__ method
+2016-12-01 21:01:47 [41] INFO Log create success
+2016-12-01 21:02:17 [68] WARNING false!!!!!!! 
+'NoneType' object has no attribute 'text'
+2016-12-01 21:02:56 [41] INFO Log create success
+2016-12-01 21:03:03 [69] WARNING false!!!!!!! 
+'NoneType' object has no attribute 'text'
+2016-12-01 21:03:54 [41] INFO Log create success
+2016-12-01 21:04:31 [71] WARNING false!!!!!!! 
+'NoneType' object has no attribute 'attrs'
+2016-12-01 21:05:51 [41] INFO Log create success
+2016-12-01 21:06:20 [71] WARNING false!!!!!!! 
+'NoneType' object has no attribute 'attrs'
+2016-12-01 21:08:02 [41] INFO Log create success
+2016-12-01 21:21:48 [41] INFO Log create success
+2016-12-01 21:23:20 [41] INFO Log create success
+2016-12-01 21:23:57 [41] INFO Log create success
+2016-12-01 21:36:20 [41] INFO Log create success
+2016-12-01 21:39:52 [41] INFO Log create success
+2016-12-01 21:41:44 [41] INFO Log create success
+2016-12-01 21:41:47 [73] WARNING There is no content, see you later, honey........
+'NoneType' object has no attribute 'findAll'
+2016-12-01 21:46:19 [41] INFO Log create success
+2016-12-01 21:54:42 [41] INFO Log create success
+2016-12-01 21:55:22 [72] WARNING false!!!!!!! 
+'NoneType' object has no attribute 'attrs'
+2016-12-01 21:56:05 [41] INFO Log create success
+2016-12-01 21:58:10 [41] INFO Log create success
+2016-12-01 22:01:34 [41] INFO Log create success
+2016-12-01 22:01:39 [76] WARNING There is no content, see you later, honey........
+'NoneType' object has no attribute 'find_all'
+2016-12-01 22:01:56 [41] INFO Log create success
+2016-12-01 22:03:20 [41] INFO Log create success
+2016-12-01 22:22:03 [41] INFO Log create success
+2016-12-01 22:22:04 [65] INFO Get the content successful!!!
+2016-12-01 22:22:04 [65] INFO Get the content successful!!!
+2016-12-01 22:22:04 [65] INFO Get the content successful!!!
+2016-12-01 22:22:04 [65] INFO Get the content successful!!!
+2016-12-01 22:22:04 [65] INFO Get the content successful!!!
+2016-12-01 22:22:04 [65] INFO Get the content successful!!!
+2016-12-01 22:22:04 [65] INFO Get the content successful!!!
+2016-12-01 22:22:04 [65] INFO Get the content successful!!!
+2016-12-01 22:22:04 [65] INFO Get the content successful!!!
+2016-12-01 22:22:04 [65] INFO Get the content successful!!!
+2016-12-01 22:22:19 [67] WARNING Get the content failed!--->There is no words.
+2016-12-01 22:22:19 [65] INFO Get the content successful!!!
+2016-12-01 22:22:19 [65] INFO Get the content successful!!!
+2016-12-01 22:22:19 [65] INFO Get the content successful!!!
+2016-12-01 22:22:19 [65] INFO Get the content successful!!!
+2016-12-01 22:22:19 [65] INFO Get the content successful!!!
+2016-12-01 22:22:19 [65] INFO Get the content successful!!!
+2016-12-01 22:22:19 [65] INFO Get the content successful!!!
+2016-12-01 22:22:19 [65] INFO Get the content successful!!!
+2016-12-01 22:22:19 [65] INFO Get the content successful!!!
+2016-12-01 22:22:19 [65] INFO Get the content successful!!!
+2016-12-01 22:22:24 [67] WARNING Get the content failed!--->There is no words.
+2016-12-01 22:22:24 [65] INFO Get the content successful!!!
+2016-12-01 22:22:24 [65] INFO Get the content successful!!!
+2016-12-01 22:22:24 [65] INFO Get the content successful!!!
+2016-12-01 22:22:24 [65] INFO Get the content successful!!!
+2016-12-01 22:22:24 [65] INFO Get the content successful!!!
+2016-12-01 22:22:24 [65] INFO Get the content successful!!!
+2016-12-01 22:22:24 [65] INFO Get the content successful!!!
+2016-12-01 22:22:24 [65] INFO Get the content successful!!!
+2016-12-01 22:22:24 [65] INFO Get the content successful!!!
+2016-12-01 22:22:24 [65] INFO Get the content successful!!!
+2016-12-01 22:35:31 [41] INFO Log create success
+2016-12-01 22:35:32 [70] INFO Get the content successful!!!
+2016-12-01 22:35:32 [70] INFO Get the content successful!!!
+2016-12-01 22:35:32 [70] INFO Get the content successful!!!
+2016-12-01 22:35:32 [70] INFO Get the content successful!!!
+2016-12-01 22:35:32 [70] INFO Get the content successful!!!
+2016-12-01 22:35:32 [70] INFO Get the content successful!!!
+2016-12-01 22:35:32 [70] INFO Get the content successful!!!
+2016-12-01 22:35:32 [70] INFO Get the content successful!!!
+2016-12-01 22:35:32 [70] INFO Get the content successful!!!
+2016-12-01 22:35:32 [70] INFO Get the content successful!!!
+2016-12-01 22:35:32 [72] WARNING Get the content failed!--->There is no words.
+2016-12-01 22:35:32 [70] INFO Get the content successful!!!
+2016-12-01 22:35:32 [70] INFO Get the content successful!!!
+2016-12-01 22:35:32 [70] INFO Get the content successful!!!
+2016-12-01 22:35:32 [70] INFO Get the content successful!!!
+2016-12-01 22:35:32 [70] INFO Get the content successful!!!
+2016-12-01 22:35:32 [70] INFO Get the content successful!!!
+2016-12-01 22:35:32 [70] INFO Get the content successful!!!
+2016-12-01 22:35:32 [70] INFO Get the content successful!!!
+2016-12-01 22:35:32 [70] INFO Get the content successful!!!
+2016-12-01 22:35:32 [70] INFO Get the content successful!!!
+2016-12-01 22:35:32 [72] WARNING Get the content failed!--->There is no words.
+2016-12-01 22:35:32 [70] INFO Get the content successful!!!
+2016-12-01 22:35:32 [70] INFO Get the content successful!!!
+2016-12-01 22:35:32 [70] INFO Get the content successful!!!
+2016-12-01 22:35:32 [70] INFO Get the content successful!!!
+2016-12-01 22:35:32 [70] INFO Get the content successful!!!
+2016-12-01 22:35:32 [70] INFO Get the content successful!!!
+2016-12-01 22:35:32 [70] INFO Get the content successful!!!
+2016-12-01 22:35:32 [70] INFO Get the content successful!!!
+2016-12-01 22:35:32 [70] INFO Get the content successful!!!
+2016-12-01 22:35:32 [70] INFO Get the content successful!!!
+2016-12-01 22:35:32 [70] INFO Get the content successful!!!
+2016-12-01 22:35:32 [70] INFO Get the content successful!!!
+2016-12-01 23:09:36 [45] INFO Log create success
+2016-12-01 23:10:59 [45] INFO Log create success
+2016-12-01 23:11:51 [45] INFO Log create success
+2016-12-01 23:11:54 [83] INFO Get the content successful!!!
+2016-12-01 23:11:54 [83] INFO Get the content successful!!!
+2016-12-01 23:11:54 [83] INFO Get the content successful!!!
+2016-12-01 23:11:54 [83] INFO Get the content successful!!!
+2016-12-01 23:11:54 [83] INFO Get the content successful!!!
+2016-12-01 23:11:54 [83] INFO Get the content successful!!!
+2016-12-01 23:11:54 [83] INFO Get the content successful!!!
+2016-12-01 23:11:54 [83] INFO Get the content successful!!!
+2016-12-01 23:11:54 [83] INFO Get the content successful!!!
+2016-12-01 23:11:54 [83] INFO Get the content successful!!!
+2016-12-01 23:11:54 [85] WARNING Get the content failed!--->There is no words.
+2016-12-01 23:11:54 [83] INFO Get the content successful!!!
+2016-12-01 23:11:54 [83] INFO Get the content successful!!!
+2016-12-01 23:11:54 [83] INFO Get the content successful!!!
+2016-12-01 23:11:54 [83] INFO Get the content successful!!!
+2016-12-01 23:11:54 [83] INFO Get the content successful!!!
+2016-12-01 23:11:54 [83] INFO Get the content successful!!!
+2016-12-01 23:11:54 [83] INFO Get the content successful!!!
+2016-12-01 23:11:54 [83] INFO Get the content successful!!!
+2016-12-01 23:11:54 [83] INFO Get the content successful!!!
+2016-12-01 23:11:54 [83] INFO Get the content successful!!!
+2016-12-01 23:11:54 [85] WARNING Get the content failed!--->There is no words.
+2016-12-01 23:11:54 [83] INFO Get the content successful!!!
+2016-12-01 23:11:54 [83] INFO Get the content successful!!!
+2016-12-01 23:11:54 [83] INFO Get the content successful!!!
+2016-12-01 23:11:54 [83] INFO Get the content successful!!!
+2016-12-01 23:11:54 [83] INFO Get the content successful!!!
+2016-12-01 23:11:54 [83] INFO Get the content successful!!!
+2016-12-01 23:11:54 [83] INFO Get the content successful!!!
+2016-12-01 23:11:54 [83] INFO Get the content successful!!!
+2016-12-01 23:11:54 [83] INFO Get the content successful!!!
+2016-12-01 23:11:54 [83] INFO Get the content successful!!!
+2016-12-01 23:11:54 [83] INFO Get the content successful!!!
+2016-12-01 23:11:54 [83] INFO Get the content successful!!!
+2016-12-01 23:11:54 [83] INFO Get the content successful!!!
+2016-12-01 23:11:54 [83] INFO Get the content successful!!!
+2016-12-01 23:11:58 [83] INFO Get the content successful!!!
+2016-12-01 23:11:58 [83] INFO Get the content successful!!!
+2016-12-01 23:11:58 [83] INFO Get the content successful!!!
+2016-12-01 23:11:58 [83] INFO Get the content successful!!!
+2016-12-01 23:11:58 [83] INFO Get the content successful!!!
+2016-12-01 23:11:58 [83] INFO Get the content successful!!!
+2016-12-01 23:11:58 [83] INFO Get the content successful!!!
+2016-12-01 23:11:58 [83] INFO Get the content successful!!!
+2016-12-01 23:11:58 [83] INFO Get the content successful!!!
+2016-12-01 23:11:58 [83] INFO Get the content successful!!!
+2016-12-01 23:11:58 [85] WARNING Get the content failed!--->There is no words.
+2016-12-01 23:11:58 [83] INFO Get the content successful!!!
+2016-12-01 23:11:58 [83] INFO Get the content successful!!!
+2016-12-01 23:11:58 [83] INFO Get the content successful!!!
+2016-12-01 23:11:58 [83] INFO Get the content successful!!!
+2016-12-01 23:11:58 [83] INFO Get the content successful!!!
+2016-12-01 23:11:58 [83] INFO Get the content successful!!!
+2016-12-01 23:11:58 [83] INFO Get the content successful!!!
+2016-12-01 23:11:58 [83] INFO Get the content successful!!!
+2016-12-01 23:11:58 [83] INFO Get the content successful!!!
+2016-12-01 23:11:58 [83] INFO Get the content successful!!!
+2016-12-01 23:11:58 [85] WARNING Get the content failed!--->There is no words.
+2016-12-01 23:11:58 [83] INFO Get the content successful!!!
+2016-12-01 23:11:58 [83] INFO Get the content successful!!!
+2016-12-01 23:11:58 [83] INFO Get the content successful!!!
+2016-12-01 23:11:58 [83] INFO Get the content successful!!!
+2016-12-01 23:11:58 [83] INFO Get the content successful!!!
+2016-12-01 23:11:58 [83] INFO Get the content successful!!!
+2016-12-01 23:11:58 [83] INFO Get the content successful!!!
+2016-12-01 23:11:58 [83] INFO Get the content successful!!!
+2016-12-01 23:11:58 [83] INFO Get the content successful!!!
+2016-12-01 23:11:58 [83] INFO Get the content successful!!!
+2016-12-01 23:11:58 [83] INFO Get the content successful!!!
+2016-12-01 23:11:58 [83] INFO Get the content successful!!!
+2016-12-01 23:12:01 [83] INFO Get the content successful!!!
+2016-12-01 23:12:01 [83] INFO Get the content successful!!!
+2016-12-01 23:12:01 [83] INFO Get the content successful!!!
+2016-12-01 23:12:01 [83] INFO Get the content successful!!!
+2016-12-01 23:12:01 [83] INFO Get the content successful!!!
+2016-12-01 23:12:01 [83] INFO Get the content successful!!!
+2016-12-01 23:12:01 [83] INFO Get the content successful!!!
+2016-12-01 23:12:01 [83] INFO Get the content successful!!!
+2016-12-01 23:12:01 [83] INFO Get the content successful!!!
+2016-12-01 23:12:01 [83] INFO Get the content successful!!!
+2016-12-01 23:12:01 [85] WARNING Get the content failed!--->There is no words.
+2016-12-01 23:12:01 [83] INFO Get the content successful!!!
+2016-12-01 23:12:01 [83] INFO Get the content successful!!!
+2016-12-01 23:12:01 [83] INFO Get the content successful!!!
+2016-12-01 23:12:01 [83] INFO Get the content successful!!!
+2016-12-01 23:12:01 [83] INFO Get the content successful!!!
+2016-12-01 23:12:01 [83] INFO Get the content successful!!!
+2016-12-01 23:12:01 [83] INFO Get the content successful!!!
+2016-12-01 23:12:01 [83] INFO Get the content successful!!!
+2016-12-01 23:12:01 [83] INFO Get the content successful!!!
+2016-12-01 23:12:01 [83] INFO Get the content successful!!!
+2016-12-01 23:12:01 [85] WARNING Get the content failed!--->There is no words.
+2016-12-01 23:12:01 [83] INFO Get the content successful!!!
+2016-12-01 23:12:01 [83] INFO Get the content successful!!!
+2016-12-01 23:12:01 [83] INFO Get the content successful!!!
+2016-12-01 23:12:01 [83] INFO Get the content successful!!!
+2016-12-01 23:12:01 [83] INFO Get the content successful!!!
+2016-12-01 23:12:01 [83] INFO Get the content successful!!!
+2016-12-01 23:12:01 [83] INFO Get the content successful!!!
+2016-12-01 23:12:01 [83] INFO Get the content successful!!!
+2016-12-01 23:12:01 [83] INFO Get the content successful!!!
+2016-12-01 23:12:01 [83] INFO Get the content successful!!!
+2016-12-01 23:12:01 [83] INFO Get the content successful!!!
+2016-12-01 23:12:01 [83] INFO Get the content successful!!!
