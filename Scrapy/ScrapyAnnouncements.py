@@ -7,6 +7,8 @@ Created on  12/1/16 7:51 PM
 @author: IMYin
 
 @File: ScrapyAnnouncements.py
+
+@Python Version: 2.7
 """
 
 import datetime
@@ -24,6 +26,7 @@ logging_path = Constants.LOGGING_PATH_BLACK_COFFEE
 
 sys.path.append(logging_path)
 
+from JobLogging import JobLogging
 
 class ScrapyAnnouncements:
     # initial log
@@ -91,12 +94,13 @@ class ScrapyAnnouncements:
         announcements['NewsTitle'] = news_title
         announcements['PDFUrl'] = pdf_url
         df = pd.DataFrame(announcements)
-        df.sort(by=['PublishTime'], inplace=True)
+        df.sort_values(by=['PublishTime'], inplace=True, ascending=False)
+        # print(df.head())
         df.to_csv(Constants.FILE_ACHIVE + self.today, header=False)
         return df
 
 
 if __name__ == '__main__':
     rawUrl = Constants.RAWURL
-    # run = ScrapyAnnouncements()
-    # run.information(rawUrl)
+    run = ScrapyAnnouncements()
+    run.information(rawUrl)
