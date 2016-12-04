@@ -17,14 +17,15 @@ import sys
 import time
 
 import pandas as pd
+import numpy as np
 import requests
 from bs4 import BeautifulSoup
 
 from Constants import Constants
 
-logging_path = Constants.LOGGING_PATH_BLACK_COFFEE
+LOGGING_PATH = Constants.LOGGING_PATH_BLACK_COFFEE
 
-sys.path.append(logging_path)
+sys.path.append(LOGGING_PATH)
 
 from JobLogging import JobLogging
 
@@ -43,10 +44,11 @@ class ScrapyInterpretation:
                 pass
                 #        self.ignore_error = ignore_error
         mylog = JobLogging(log_name, log_dir)
+        mylog.set_level(log_lev)
         self.log = mylog.get_logger()
-        self.log.info("ScrapyInterpretation's log create success")
+        self.log.info("ScrapyInterpretation's log create success.")
 
-    def spellUrls(self, url):
+    def spell_urls(self, url):
         urls = []
         for i in range(3):
             urls.append(url + str(i))
@@ -65,39 +67,67 @@ class ScrapyInterpretation:
         return bsObj
 
     def information(self, url):
-        urls = self.spellUrls(url)
+        urls = self.spell_urls(url)
         publish_time = []
         news_content = []
         news_title = []
         pdf_url = []
         announcements = {}
-        for url in urls:
-            bsObj = self.conn(url)
-            time.sleep(3)
+        rows = 0
+        for u in urls:
+            bsObj = self.conn(u)
             try:
                 content = bsObj.find("div", "main-list").find("ul", "new-list").find_all('li')
+                time.sleep(3)
                 for _ in content:
                     try:
                         publish_time.append(_.find("span").text.encode('utf-8'))
                         news_content.append(_.find("a").attrs["href"].encode('utf-8'))
                         news_title.append(_.find("a").attrs["title"].encode('utf-8'))
                         pdf_url.append(_.find("a", {"class": "download"}).attrs["href"].encode('utf-8'))
-                        self.log.info("Get the content successful!!!")
+                        rows += 1
                     except Exception as e:
                         self.log.warn("Get the content failed!--->There is no words.")
                         continue
             except Exception as e:
                 self.log.warn("There is no content, see you later, honey........\n" + e.message)
+                continue
 
-        announcements['PublishTime'] = publish_time
-        announcements['NewsContent'] = news_content
-        announcements['NewsTitle'] = news_title
-        announcements['PDFUrl'] = pdf_url
-        df = pd.DataFrame(announcements)
-        df.sort_values(by=['PublishTime'], inplace=True, ascending=False)
+        announcements['publishtime'] = publish_time
+        announcements['contents'] = news_content
+        announcements['title'] = news_title
+        announcements['pdfurl'] = pdf_url
+        df = pd.DataFrame(announcements, columns=['publishtime', 'title', 'contents', 'pdfurl'])
+        df.sort_values(by=['publishtime'], inplace=True, ascending=False)
+        self.log.info("Great job, you got " + str(rows) + " rows information　today.")
         # print(df.head())
-        df.to_csv(Constants.FILE_ACHIVE + self.today, header=False)
         return df
+
+    def update_df(self, url):
+        df = self.information(url)
+        stock_code = []
+        for item in df.contents.values:
+            bsObj = self.conn(item)
+            try:
+                code = bsObj.find("div", {"class":"stock-search-bd"}).find("div").attrs["value"]
+                time.sleep(3)
+                try:
+                    stock_code.append(code)
+                except Exception as e:
+                    self.log.warn("Get the code failed...")
+                    stock_code.append(np.nan)
+                    continue
+            except Exception as e:
+                self.log.warn("There is no content, see you later, honey........\n" + e.message)
+                continue
+        if len(stock_code) > 0:
+            df['code'] = stock_code
+        else:
+            df['code'] = np.zeros((len(df),), dtype='S1')
+        return df
+
+
+
 
 
 if __name__ == '__main__':

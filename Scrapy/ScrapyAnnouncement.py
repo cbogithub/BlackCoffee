@@ -8,7 +8,22 @@ Created on  12/4/16 9:18 AM
 
 @File: ScrapyAnnouncement.py
 """
+import datetime
+import os
+import sys
+import time
 
+import pandas as pd
+import requests
+from bs4 import BeautifulSoup
+
+from Constants import Constants
+
+LOGGING_PATH = Constants.LOGGING_PATH_BLACK_COFFEE
+
+sys.path.append(LOGGING_PATH)
+
+from JobLogging import JobLogging
 
 class ScrapyAnnouncement:
     # initial log
@@ -25,17 +40,21 @@ class ScrapyAnnouncement:
                 pass
                 #        self.ignore_error = ignore_error
         mylog = JobLogging(log_name, log_dir)
+        mylog.set_level(log_lev)
         self.log = mylog.get_logger()
-        self.log.info("ScrapyAnnouncement's log create success")
+        self.log.info("ScrapyAnnouncement's log create success.")
 
-        # Connection
-        def conn(self, url, data, proxies=None):
-            session = requests.Session()
-            # add the header
-            headers = {
-                'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_5)AppleWebKit 537.36 (KHTML,like Gecko) Chrome',
-                'Connection': 'Keep-Alive', 'Accept-Language': 'zh-CN,zh;q=0.8', 'Accept-Encoding': 'gzip,deflate,sdch',
-                'Accept': '*/*', 'Accept-Charset': 'GBK,utf-8;q=0.7,*;q=0.3', 'Cache-Control': 'max-age=0'}
-            req = session.post(url, data, headers=headers)
-            bsObj = BeautifulSoup(req.text, "lxml")
-            return bsObj
+    # Connection
+    def conn(self, url, data, proxies=None):
+        session = requests.Session()
+        # add the header
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_5)AppleWebKit 537.36 (KHTML,like Gecko) Chrome',
+            'Connection': 'Keep-Alive', 'Accept-Language': 'zh-CN,zh;q=0.8', 'Accept-Encoding': 'gzip,deflate,sdch',
+            'Accept': '*/*', 'Accept-Charset': 'GBK,utf-8;q=0.7,*;q=0.3', 'Cache-Control': 'max-age=0'}
+        req = session.post(url, data, headers=headers)
+        bsObj = BeautifulSoup(req.text, "lxml")
+        return bsObj
+
+    def info(self, url, data):
+
