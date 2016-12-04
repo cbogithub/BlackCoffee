@@ -11,9 +11,7 @@ Created on  12/4/16 9:18 AM
 import datetime
 import os
 import sys
-import time
 
-import pandas as pd
 import requests
 from bs4 import BeautifulSoup
 
