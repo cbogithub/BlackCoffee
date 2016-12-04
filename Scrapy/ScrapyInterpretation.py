@@ -60,7 +60,6 @@ class ScrapyInterpretation:
         news_content = []
         news_title = []
         pdf_url = []
-        announcements = {}
         rows = 0
         for u in urls:
             bsObj = utils.conn_get(url=u)
@@ -81,10 +80,7 @@ class ScrapyInterpretation:
                 self.log.warn(u"There is no content, see you later, honey........\n" + e.message)
                 continue
 
-        announcements[u'publishtime'] = publish_time
-        announcements[u'link'] = news_content
-        announcements[u'title'] = news_title
-        announcements[u'pdfurl'] = pdf_url
+        announcements = {u'publishtime': publish_time, u'link': news_content, u'link': news_title, u'pdfurl': pdf_url}
         df = pd.DataFrame(announcements, columns=[u'publishtime', u'title', u'link', u'pdfurl'])
         df.sort_values(by=['publishtime'], inplace=True, ascending=False)
         self.log.info(u"Great job, you got {} rows information　today.".format(rows))
@@ -125,7 +121,7 @@ class ScrapyInterpretation:
                 os.makedirs(archive_path)
             except:
                 pass
-        df.to_csv(archive_path + '/' + self.log_name + '.csv', mode='a+')
+        df.to_csv(archive_path + '/' + self.log_name + '.csv')
 
 
 if __name__ == '__main__':

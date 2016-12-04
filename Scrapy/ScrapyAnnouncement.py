@@ -77,10 +77,8 @@ class ScrapyAnnouncement:
             except Exception as e:
                 self.log.warn(u"There is no content, see you later, honey........\n" + e.message)
                 continue
-        announcements[u'publishtime'] = publish_time
-        announcements[u'code'] = stock_code
-        announcements[u'title'] = news_title
-        announcements[u'pdfurl'] = pdf_url
+
+        announcements = {u'publishtime': publish_time, u'code': stock_code, u'title': news_title, u'pdfurl': pdf_url}
         df = pd.DataFrame(announcements, columns=[u'publishtime', u'code', u'title', u'pdfurl'])
         df.sort_values(by=['publishtime'], inplace=True, ascending=False)
         self.log.info(u"Great job, you got {} rows information　today.".format(rows))
@@ -90,7 +88,7 @@ class ScrapyAnnouncement:
                 os.makedirs(archive_path)
             except:
                 pass
-        df.to_csv(archive_path + '/' + self.log_name + '.csv', mode='a+' ,index=False)
+        df.to_csv(archive_path + '/' + self.log_name + '.csv')
 
 
 if __name__ == '__main__':
