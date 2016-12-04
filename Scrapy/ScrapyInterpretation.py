@@ -6,7 +6,7 @@ Created on  12/1/16 7:51 PM
 
 @author: IMYin
 
-@File: ScrapyAnnouncements.py
+@File: ScrapyInterpretation.py
 
 @Python Version: 2.7
 """
@@ -28,7 +28,7 @@ sys.path.append(logging_path)
 
 from JobLogging import JobLogging
 
-class ScrapyAnnouncements:
+class ScrapyInterpretation:
     # initial log
     def __init__(self, log_lev='INFO'):
         date_today = datetime.datetime.now().date()
@@ -44,7 +44,7 @@ class ScrapyAnnouncements:
                 #        self.ignore_error = ignore_error
         mylog = JobLogging(log_name, log_dir)
         self.log = mylog.get_logger()
-        self.log.info("Log create success")
+        self.log.info("ScrapyInterpretation's log create success")
 
     def spellUrls(self, url):
         urls = []
@@ -102,5 +102,5 @@ class ScrapyAnnouncements:
 
 if __name__ == '__main__':
     rawUrl = Constants.RAWURL
-    run = ScrapyAnnouncements()
+    run = ScrapyInterpretation()
     run.information(rawUrl)
