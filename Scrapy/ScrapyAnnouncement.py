@@ -18,12 +18,13 @@ import numpy as np
 import pandas as pd
 
 import Utils as utils
+
+CONSTANTS_PATH = os.path.dirname(os.getcwd())
+sys.path.append(CONSTANTS_PATH)
 from Constants import Constants
 
-LOGGING_PATH = Constants.LOGGING_PATH_BLACK_COFFEE
-
+LOGGING_PATH = Constants.LOGGING_PATH
 sys.path.append(LOGGING_PATH)
-
 from JobLogging import JobLogging
 
 URL = Constants.RAW_URL_OF_ANNOUNCEMENT
@@ -36,7 +37,7 @@ class ScrapyAnnouncement:
     def __init__(self, log_lev='INFO'):
         date_today = datetime.datetime.now().date()
         self.log_name = os.path.splitext(os.path.split(sys.argv[0])[1])[0]
-        log_dir = Constants.TASK_LOG_PATH_BLACK_COFFEE
+        log_dir = Constants.TASK_LOG_PATH
         self.today = date_today.strftime("%Y%m%d")
         log_dir += '/' + self.today
         if not os.path.isdir(log_dir):

@@ -19,13 +19,15 @@ import time
 
 import numpy as np
 import pandas as pd
+
 import Utils as utils
+
+CONSTANTS_PATH = os.path.dirname(os.getcwd())
+sys.path.append(CONSTANTS_PATH)
 from Constants import Constants
 
-LOGGING_PATH = Constants.LOGGING_PATH_BLACK_COFFEE
-
+LOGGING_PATH = Constants.LOGGING_PATH
 sys.path.append(LOGGING_PATH)
-
 from JobLogging import JobLogging
 
 
@@ -34,7 +36,7 @@ class ScrapyInterpretation:
     def __init__(self, log_lev='INFO'):
         date_today = datetime.datetime.now().date()
         self.log_name = os.path.splitext(os.path.split(sys.argv[0])[1])[0]
-        log_dir = Constants.TASK_LOG_PATH_BLACK_COFFEE
+        log_dir = Constants.TASK_LOG_PATH
         self.today = date_today.strftime("%Y%m%d")
         log_dir += '/' + self.today
         if not os.path.isdir(log_dir):
@@ -80,7 +82,7 @@ class ScrapyInterpretation:
                 self.log.warn(u"There is no content, see you later, honey........\n" + e.message)
                 continue
 
-        announcements = {u'publishtime': publish_time, u'link': news_content, u'link': news_title, u'pdfurl': pdf_url}
+        announcements = {u'publishtime': publish_time, u'link': news_content, u'title': news_title, u'pdfurl': pdf_url}
         df = pd.DataFrame(announcements, columns=[u'publishtime', u'title', u'link', u'pdfurl'])
         df.sort_values(by=['publishtime'], inplace=True, ascending=False)
         self.log.info(u"Great job, you got {} rows information　today.".format(rows))
@@ -96,7 +98,7 @@ class ScrapyInterpretation:
             try:
                 code = bsObj.find("meta", {"name": "keywords"}).attrs["content"].split(",")[0]
                 # code = code.zfill(6)
-                content = bsObj.find("div", {"id": "page_0"}).text.encode('utf-8')
+                content = bsObj.find("div", {"class": "explain-box"}).text.encode('utf-8')
                 content = re.sub('\r+', "", content)
                 content = re.sub('\n+', "", content)
                 content = re.sub(' +', "", content)

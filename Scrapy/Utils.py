@@ -9,9 +9,14 @@ Created on  12/4/16 4:50 PM
 @File: Utils.py
 """
 
+import os
+import sys
+
 import requests
 from bs4 import BeautifulSoup
 
+CONSTANTS_PATH = os.path.dirname(os.getcwd())
+sys.path.append(CONSTANTS_PATH)
 from Constants import Constants
 
 HEADERS = Constants.HEADERS
