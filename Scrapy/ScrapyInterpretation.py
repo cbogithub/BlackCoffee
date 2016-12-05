@@ -62,7 +62,6 @@ class ScrapyInterpretation:
         news_content = []
         news_title = []
         pdf_url = []
-        rows = 0
         for u in urls:
             bsObj = utils.conn_get(url=u)
             try:
@@ -74,7 +73,6 @@ class ScrapyInterpretation:
                         news_content.append(_.find("a").attrs["href"].encode('utf-8'))
                         news_title.append(_.find("a").attrs["title"].encode('utf-8'))
                         pdf_url.append(_.find("a", {"class": "download"}).attrs["href"].encode('utf-8'))
-                        rows += 1
                     except Exception as e:
                         self.log.warn(u"Get the content failed!--->There is no words.")
                         continue
@@ -82,18 +80,16 @@ class ScrapyInterpretation:
                 self.log.warn(u"There is no content, see you later, honey........\n" + e.message)
                 continue
 
-        announcements = {u'publishtime': publish_time, u'link': news_content, u'title': news_title, u'pdfurl': pdf_url}
-        df = pd.DataFrame(announcements, columns=[u'publishtime', u'title', u'link', u'pdfurl'])
-        df.sort_values(by=['publishtime'], inplace=True, ascending=False)
-        self.log.info(u"Great job, you got {} rows information　today.".format(rows))
-        return df
+        announcements = {u'publish_time': publish_time, u'link': news_content, u'title': news_title,
+                         u'pdf_url': pdf_url}
+        return announcements
 
     def update_df_and_write2csv(self, url):
-        df = self.information(url)
+        announcements = self.information(url)
         self.log.info(u"Let's update the df...")
         stock_code = []
         contents = []
-        for item in df.link.values:
+        for item in announcements[u'link']:
             bsObj = utils.conn_get(url=item)
             try:
                 code = bsObj.find("meta", {"name": "keywords"}).attrs["content"].split(",")[0]
@@ -112,11 +108,16 @@ class ScrapyInterpretation:
                 self.log.warn(u"Get the code failed...\nFillback 'null' to it.")
                 continue
         if len(stock_code) > 0:
-            df[u'code'] = stock_code
-            df[u'content'] = contents
+            announcements[u'code'] = stock_code
+            announcements[u'content'] = contents
         else:
-            fills = np.zeros((len(df),), dtype='S1')
-            df[u'code'] = df[u'content'] = fills
+            fills = np.zeros((len(announcements[u'link']),), dtype='S1')
+            announcements[u'code'] = fills
+            announcements[u'content'] = fills
+
+        df = pd.DataFrame(announcements, columns=[u'publish_time', u'code', u'title', u'content', u'pdf_url'])
+        self.log.info(u"Great job, you got {} rows information today.".format(len(df)))
+        df.sort_values(by=['publish_time'], inplace=True, ascending=False)
         archive_path = Constants.FILE_ARCHIVE + self.today
         if not os.path.isdir(archive_path):
             try:
@@ -124,6 +125,7 @@ class ScrapyInterpretation:
             except:
                 pass
         df.to_csv(archive_path + '/' + self.log_name + '.csv')
+        self.log.info(u"Save data to {} successful.".format(self.log_name))
 
 
 if __name__ == '__main__':
