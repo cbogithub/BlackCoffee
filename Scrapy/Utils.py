@@ -17,26 +17,20 @@ from bs4 import BeautifulSoup
 
 CONSTANTS_PATH = os.path.dirname(os.getcwd())
 sys.path.append(CONSTANTS_PATH)
-from Constants import Constants
-
-HEADERS = Constants.HEADERS
-
-cons = Constants()
+import Constants as cons
 
 
 def conn_post(url, data=None, proxies=None):
     session = requests.Session()
-    # add the header
-    HEADERS['User-Agent'] = cons.get_user_agent()
-    req = session.post(url, data, headers=HEADERS)
+    headers = cons.get_headers()
+    req = session.post(url, data, headers=headers)
     bsObj = BeautifulSoup(req.text, "lxml")
     return bsObj
 
 
 def conn_get(url, proxies=None):
     session = requests.Session()
-    # add the header
-    HEADERS['User-Agent'] = cons.get_user_agent()
-    req = session.get(url, headers=HEADERS)
+    headers = cons.get_headers()
+    req = session.get(url, headers=headers)
     bsObj = BeautifulSoup(req.text, "lxml")
     return bsObj

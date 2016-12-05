@@ -19,7 +19,7 @@ class JobLogging:
         self.logger.setLevel(logging.DEBUG)
         self.consoleHandler = logging.StreamHandler()
         self.consoleHandler.setLevel(logging.DEBUG)
-        self.fileHandler = logging.FileHandler(filename=log_path + '/' + task_name + '.' + time.strftime('%Y%m%d') + '.log', mode='a', encoding='utf8')
+        self.fileHandler = logging.FileHandler(filename=log_path + '/' + task_name + '.' + time.strftime('%Y%m') + '.log', mode='a+', encoding='utf8')
         self.fileHandler.setLevel(logging.DEBUG)
         loggerFormatter = logging.Formatter('%(asctime)s [%(lineno)s] %(levelname)s %(message)s', datefmt = '%Y-%m-%d %H:%M:%S')
         self.consoleHandler.setFormatter(loggerFormatter)
