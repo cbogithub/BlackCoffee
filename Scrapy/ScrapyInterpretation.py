@@ -111,22 +111,27 @@ class ScrapyInterpretation:
         df = pd.DataFrame(announcements, columns=[u'publish_time', u'code', u'title', u'content', u'pdf_url'])
         self.log.info(u"Great job, you got {} rows information today.".format(len(df)))
         df.sort_values(by=['publish_time'], inplace=True, ascending=False)
-        archive_path = cons.FILE_ARCHIVE + self.today
-        if not os.path.isdir(archive_path):
-            try:
-                os.makedirs(archive_path)
-            except:
-                pass
-        data_path = os.path.join(archive_path, self.log_name + ".csv")
-        df.to_csv(data_path)
-        self.log.info(u"Save data to {} successful.".format(data_path))
+        return df
+
+    def return_worth_data(self):
+        df = self.update_df_and_write2csv(cons.RAW_URL_OF_INTERPRETATION)
+        return [line[u'code'] for index, line in df.iterrows() if cons.UP in line[u'content']]
 
 
 if __name__ == '__main__':
     time1 = datetime.datetime.now()
     rawUrl = cons.RAW_URL_OF_INTERPRETATION
     run = ScrapyInterpretation()
-    run.update_df_and_write2csv(rawUrl)
+    df = run.update_df_and_write2csv(rawUrl)
+    archive_path = cons.FILE_ARCHIVE + run.today
+    if not os.path.isdir(archive_path):
+        try:
+            os.makedirs(archive_path)
+        except:
+            pass
+    data_path = os.path.join(archive_path, run.log_name + ".csv")
+    df.to_csv(data_path)
+    run.log.info(u"Save data to {} successful.".format(data_path))
     time2 = datetime.datetime.now()
     run.log.info(u"It costs {} sec to run it.".format((time2 - time1).total_seconds()))
     run.log.info(u"-" * 100)

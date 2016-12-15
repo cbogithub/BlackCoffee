@@ -26,11 +26,16 @@ import Constants as cons
 LOGGING_PATH = cons.LOGGING_PATH
 sys.path.append(LOGGING_PATH)
 from JobLogging import JobLogging
+from MakeLogs import Logs
 
 URL = cons.RAW_URL_OF_ANNOUNCEMENT
 URL_Net = urlparse(URL).netloc
 URL_SCHEME = urlparse(URL).scheme
 
+task_name = os.path.splitext(os.path.split(sys.argv[0])[1])[0]
+log = Logs(task_name)
+log.info(u"hello world")
+print "ok!"
 
 class ScrapyAnnouncement:
     # initial log
@@ -84,7 +89,7 @@ class ScrapyAnnouncement:
                 os.makedirs(archive_path)
             except:
                 pass
-        data_path = os.path.join(archive_path,self.log_name+".csv")
+        data_path = os.path.join(archive_path, self.log_name + ".csv")
         df.to_csv(data_path)
         self.log.info(u"Save data to {} successful.".format(data_path))
 
