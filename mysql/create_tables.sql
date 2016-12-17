@@ -1,3 +1,9 @@
+CREATE DATABASE stock CHARACTER SET 'utf8' COLLATE 'utf8_general_ci';
+
+GRANT ALL ON stock.* TO 'stock'@'localhost';
+
+USE stock;
+
 CREATE TABLE announcement_201612(
 publish_time    CHAR(10),
 code            CHAR(6),

@@ -16,6 +16,7 @@ import os
 import re
 import sys
 import time
+import pymysql
 
 import numpy as np
 import pandas as pd
@@ -30,6 +31,9 @@ LOGGING_PATH = cons.LOGGING_PATH
 sys.path.append(LOGGING_PATH)
 from JobLogging import JobLogging
 
+current_time = time.strftime('%Y%m', time.localtime(time.time()))
+
+table_name = cons.inter + "_" + current_time
 
 class ScrapyInterpretation:
     # initial log
@@ -81,7 +85,7 @@ class ScrapyInterpretation:
                          u'pdf_url': pdf_url}
         return announcements
 
-    def update_df_and_write2csv(self, url):
+    def update_df(self, url):
         announcements = self.information(url)
         stock_code = []
         contents = []
@@ -109,12 +113,36 @@ class ScrapyInterpretation:
             announcements[u'content'] = fills
 
         df = pd.DataFrame(announcements, columns=[u'publish_time', u'code', u'title', u'content', u'pdf_url'])
-        self.log.info(u"Great job, you got {} rows information today.".format(len(df)))
         df.sort_values(by=['publish_time'], inplace=True, ascending=False)
         return df
 
-    def return_worth_data(self):
-        df = self.update_df_and_write2csv(cons.RAW_URL_OF_INTERPRETATION)
+    def insert_to_table(self, df):
+        connection = pymysql.connect(host=cons.host,
+                                     user=cons.user,
+                                     password=cons.passwd,
+                                     db=cons.db,
+                                     charset='utf8',  # set the mysql character is utf-8 !!!
+                                     cursorclass=pymysql.cursors.DictCursor)
+        try:
+            with connection.cursor() as cursor:
+                for index, row in df.iterrows():
+                    sql = 'INSERT INTO {} (publish_time, code, title, content, pdf_url) VALUES (%s, %s, %s, %s, %s)'.format(
+                        table_name)
+                    cursor.execute(sql, (
+                        row[u'publish_time'], row[u'code'], row[u'title'], row[u'content'], row[u'pdf_url']))
+                    self.log.info(
+                        u"Got the '{}, {}, {}, {}, {}' into table: {}".format(row[u'publish_time'], row[u'code'],
+                                                                         row[u'title'].decode('utf-8'),
+                                                                         row[u'content'].decode('utf-8'),
+                                                                         row[u'pdf_url'], table_name))
+            connection.commit()
+            self.log.info(u"Great job, you got {} rows information　today.".format(len(df)))
+        finally:
+            connection.close()
+
+
+    def worth_data(self):
+        df = self.update_df(cons.RAW_URL_OF_INTERPRETATION)
         return [line[u'code'] for index, line in df.iterrows() if cons.UP in line[u'content']]
 
 
@@ -122,16 +150,7 @@ if __name__ == '__main__':
     time1 = datetime.datetime.now()
     rawUrl = cons.RAW_URL_OF_INTERPRETATION
     run = ScrapyInterpretation()
-    df = run.update_df_and_write2csv(rawUrl)
-    archive_path = cons.FILE_ARCHIVE + run.today
-    if not os.path.isdir(archive_path):
-        try:
-            os.makedirs(archive_path)
-        except:
-            pass
-    data_path = os.path.join(archive_path, run.log_name + ".csv")
-    df.to_csv(data_path)
-    run.log.info(u"Save data to {} successful.".format(data_path))
+    run.insert_to_table(run.update_df(rawUrl))
     time2 = datetime.datetime.now()
     run.log.info(u"It costs {} sec to run it.".format((time2 - time1).total_seconds()))
     run.log.info(u"-" * 100)
