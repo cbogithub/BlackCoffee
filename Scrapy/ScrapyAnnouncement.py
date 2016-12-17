@@ -31,9 +31,6 @@ from JobLogging import JobLogging
 URL = cons.RAW_URL_OF_ANNOUNCEMENT
 URL_Net = urlparse(URL).netloc
 URL_SCHEME = urlparse(URL).scheme
-current_time = time.strftime('%Y%m', time.localtime(time.time()))
-
-table_name = cons.announ + "_" + current_time
 
 
 class ScrapyAnnouncement:
@@ -83,6 +80,8 @@ class ScrapyAnnouncement:
         df = pd.DataFrame(announcements, columns=[u'publishtime', u'code', u'title', u'pdfurl'])
 
         return df
+        # Write content to file.csv
+
         # archive_path = cons.FILE_ARCHIVE + self.today
         # if not os.path.isdir(archive_path):
         #     try:
@@ -93,24 +92,25 @@ class ScrapyAnnouncement:
         # df.to_csv(data_path)
         # self.log.info(u"Save data to {} successful.".format(data_path))
 
-    def insertTable(self, df):
-        connection = pymysql.connect(host=cons.host,
-                                     user=cons.user,
-                                     password=cons.passwd,
-                                     db=cons.db,
+    # Use mysql to store information of stock which is crawled by some websites.
+    def insert_to_table(self, df):
+        connection = pymysql.connect(host=cons.mysql_host,
+                                     user=cons.mysql_user,
+                                     password=cons.mysql_passwd,
+                                     db=cons.stock_db,
                                      charset='utf8',  # set the mysql character is utf-8 !!!
                                      cursorclass=pymysql.cursors.DictCursor)
         try:
             with connection.cursor() as cursor:
                 for index, row in df.iterrows():
                     sql = 'INSERT INTO {} (publish_time, code, content, pdf_url) VALUES (%s, %s, %s, %s)'.format(
-                        table_name)
+                        cons.announ_table_name)
                     cursor.execute(sql, (
                         row[u'publishtime'], row[u'code'], row[u'title'], row[u'pdfurl']))
                     self.log.info(
                         u"Got the '{}, {}, {}, {}' into table: {}".format(row[u'publishtime'], row[u'code'],
-                                                                         row[u'title'].decode('utf-8'),
-                                                                         row[u'pdfurl'], table_name))
+                                                                          row[u'title'].decode('utf-8'),
+                                                                          row[u'pdfurl'], cons.announ_table_name))
             connection.commit()
             self.log.info(u"Great job, you got {} rows information　today.".format(len(df)))
         finally:
@@ -121,7 +121,7 @@ if __name__ == '__main__':
     time1 = datetime.datetime.now()
     rawUrl = cons.RAW_URL_OF_INTERPRETATION
     run = ScrapyAnnouncement()
-    run.insertTable(run.info())
+    run.insert_to_table(run.info())
     time2 = datetime.datetime.now()
     run.log.info(u"It costs {} sec to run it.".format((time2 - time1).total_seconds()))
     run.log.info(u"-" * 100)

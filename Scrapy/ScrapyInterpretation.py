@@ -31,9 +31,6 @@ LOGGING_PATH = cons.LOGGING_PATH
 sys.path.append(LOGGING_PATH)
 from JobLogging import JobLogging
 
-current_time = time.strftime('%Y%m', time.localtime(time.time()))
-
-table_name = cons.inter + "_" + current_time
 
 class ScrapyInterpretation:
     # initial log
@@ -117,29 +114,28 @@ class ScrapyInterpretation:
         return df
 
     def insert_to_table(self, df):
-        connection = pymysql.connect(host=cons.host,
-                                     user=cons.user,
-                                     password=cons.passwd,
-                                     db=cons.db,
+        connection = pymysql.connect(host=cons.mysql_host,
+                                     user=cons.mysql_user,
+                                     password=cons.mysql_passwd,
+                                     db=cons.stock_db,
                                      charset='utf8',  # set the mysql character is utf-8 !!!
                                      cursorclass=pymysql.cursors.DictCursor)
         try:
             with connection.cursor() as cursor:
                 for index, row in df.iterrows():
                     sql = 'INSERT INTO {} (publish_time, code, title, content, pdf_url) VALUES (%s, %s, %s, %s, %s)'.format(
-                        table_name)
+                        cons.inter_table_name)
                     cursor.execute(sql, (
                         row[u'publish_time'], row[u'code'], row[u'title'], row[u'content'], row[u'pdf_url']))
                     self.log.info(
                         u"Got the '{}, {}, {}, {}, {}' into table: {}".format(row[u'publish_time'], row[u'code'],
-                                                                         row[u'title'].decode('utf-8'),
-                                                                         row[u'content'].decode('utf-8'),
-                                                                         row[u'pdf_url'], table_name))
+                                                                              row[u'title'].decode('utf-8'),
+                                                                              row[u'content'].decode('utf-8'),
+                                                                              row[u'pdf_url'], cons.inter_table_name))
             connection.commit()
             self.log.info(u"Great job, you got {} rows information　today.".format(len(df)))
         finally:
             connection.close()
-
 
     def worth_data(self):
         df = self.update_df(cons.RAW_URL_OF_INTERPRETATION)
