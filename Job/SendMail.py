@@ -24,7 +24,7 @@ CONSTANTS_PATH = os.path.dirname(os.getcwd())
 sys.path.append(CONSTANTS_PATH)
 import Constants as cons
 
-COMMASPACE = ', '
+COMMASPACE = cons.SPLIT_ITEM1
 date_today = datetime.datetime.now().date()
 today = date_today.strftime("%Y%m%d")
 archive_path = cons.FILE_ARCHIVE
