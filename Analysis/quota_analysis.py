@@ -10,6 +10,7 @@ Created on 12/15/16 11:12 PM
 """
 import os
 import sys
+import datetime
 
 import pymysql
 import talib as tl
@@ -21,6 +22,8 @@ import matplotlib.pyplot as plt
 CONSTANTS_PATH = os.path.dirname(os.getcwd())
 sys.path.append(CONSTANTS_PATH)
 import Constants as cons
+
+yestoday = (datetime.date.today() - datetime.timedelta(days=1)).strftime("%m-%d")
 
 
 def conn_mysql():
@@ -43,11 +46,15 @@ def get_inter_codes():
     connection = conn_mysql()
     try:
         with connection.cursor() as cursor:
-            sql = u"SELECT code, content FROM {}".format(cons.inter_table_name)
+            sql = u"SELECT DISTINCT(publish_time),code,pdf_url " \
+                  u"FROM {} WHERE publish_time LIKE '{}%' " \
+                  u"AND content LIKE '%{}%'" \
+                .format(cons.inter_table_name, yestoday, cons.UP)
             x = cursor.execute(sql)
             result = cursor.fetchmany(x)
-            codes = [item['code'] for item in result if cons.UP in item['content']]
-            # print len(codes)
+            # codes = [item['code'] for item in result if cons.UP in item['content']]
+            codes = [item['code'] for item in result]
+            print codes
     finally:
         connection.close()
         return codes
@@ -94,6 +101,7 @@ def plot_macd(code, macd_seven):
     ax.grid(True)
     ax.plot(x, macd_seven[u'macd'].values, 'r-', label=u'macd')
     ax.plot(x, macd_seven[u'macdsignal'], 'k-', label=u'macdsignal')
+    ax.set_title(u"{}'s macd".format(code))
     ax.legend(loc='best')
     plt.savefig(cons.MACD_PLOT_RESULT + u'/' + code + u'.png', format='png')
 
