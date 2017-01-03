@@ -202,20 +202,47 @@ def plot_quota(code, macd, rsi, bbands):
                 ax.fmt_xdata = mdates.DateFormatter('%Y-%m-%d')
 
     plt.savefig(cons.MACD_PLOT_RESULT + u'/' + code + u'.png', format=u'png')
-    if (rsi.iloc[-1] > rsi.iloc[-2]
-        and upperband.iloc[-1] > upperband.iloc[-2]
-        and lowerband.iloc[-1] < lowerband.iloc[-2]
-        and macds.iloc[-1] > macds.iloc[-2]
-        and (np.abs(macdsignal.iloc[-1] - macds.iloc[-1]) < 0.02)):
-        return code
 
 
-def up_codes():
-    up_codes = []
+def get_useful_codes(code, macd, rsi, bbands):
+    useful_trade = {}
     for code, pdf in get_inter_codes().items():
         df = trade_data(code)
-        worths = plot_quota(code, get_macd_info(df), get_rsi_info(df), get_bbands_info(df))
-        if worths != None:
-            up_codes.append(worths)
-    return up_codes()
-print up_codes
+        macd = get_macd_info(df)
+        rsi = (get_rsi_info(df))[u'rsi']
+        bbands = get_bbands_info(df)
+        macds = macd[u'macd']
+        macdsignal = macd[u'macdsignal']
+        upperband = bbands[u'upperband']
+        lowerband = bbands[u'lowerband']
+        if (rsi.iloc[-1] > rsi.iloc[-2]
+            and upperband.iloc[-1] > upperband.iloc[-2]
+            and lowerband.iloc[-1] < lowerband.iloc[-2]
+            and macds.iloc[-1] > macds.iloc[-2]
+            and (np.abs(macdsignal.iloc[-1] - macds.iloc[-1]) < 0.02)):
+            useful_trade[code] = pdf
+            plot_quota(code, macd, rsi, bbands)
+    return useful_trade
+
+
+def insert_to_table_useful(useful_trade):
+    connection = conn_mysql()
+    try:
+        with connection.cursor() as cursor:
+            for k, v in useful_trade.items():
+                sql = ('INSERT INTO {} (time,code,pdf) VALUES( %s, % s, % s)').format(cons.useful_table_name)
+                cursor.execute(sql, (today_str, k, v))
+            connection.commit()
+    finally:
+        connection.close()
+
+    def up_codes():
+        up_codes = []
+        for code, pdf in get_inter_codes().items():
+            df = trade_data(code)
+            worths = plot_quota(code, get_macd_info(df), get_rsi_info(df), get_bbands_info(df))
+            if worths != None:
+                up_codes.append(worths)
+        return up_codes()
+
+    print up_codes
