@@ -123,10 +123,14 @@ class ScrapyInterpretation:
         try:
             with connection.cursor() as cursor:
                 for index, row in df.iterrows():
-                    sql = 'INSERT INTO {} (publish_time, code, title, content, pdf_url) VALUES (%s, %s, %s, %s, %s)'.format(
+                    sql = cons.insert_inter_table_sql.format(
                         cons.inter_table_name)
                     cursor.execute(sql, (
-                        row[u'publish_time'], row[u'code'], row[u'title'], row[u'content'], row[u'pdf_url']))
+                        row[u'publish_time'],
+                        row[u'code'],
+                        row[u'title'],
+                        row[u'content'],
+                        row[u'pdf_url']))
                     self.log.info(
                         u"Got the '{}, {}, {}, {}, {}' into table: {}".format(row[u'publish_time'], row[u'code'],
                                                                               row[u'title'].decode('utf-8'),

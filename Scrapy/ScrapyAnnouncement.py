@@ -103,8 +103,7 @@ class ScrapyAnnouncement:
         try:
             with connection.cursor() as cursor:
                 for index, row in df.iterrows():
-                    sql = 'INSERT INTO {} (publish_time, code, content, pdf_url) VALUES (%s, %s, %s, %s)'.format(
-                        cons.announ_table_name)
+                    sql = cons.insert_announ_table_sql.format(cons.announ_table_name)
                     cursor.execute(sql, (
                         row[u'publishtime'], row[u'code'], row[u'title'], row[u'pdfurl']))
                     self.log.info(
