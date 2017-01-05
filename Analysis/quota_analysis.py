@@ -24,7 +24,9 @@ CONSTANTS_PATH = os.path.dirname(os.getcwd())
 sys.path.append(CONSTANTS_PATH)
 import Constants as cons
 
-yesterday = (datetime.date.today() - datetime.timedelta(days=1)).strftime("%m-%d")
+today = datetime.date.today()
+today_str = today.strftime(u'%Y-%m-%d')
+yesterday = (today - datetime.timedelta(days=1)).strftime("%m-%d")
 view_days = 14
 textsize = 9
 
@@ -49,16 +51,10 @@ def get_inter_codes():
     connection = conn_mysql()
     try:
         with connection.cursor() as cursor:
-            sql = (u"SELECT DISTINCT(publish_time),code,pdf_url "
-                   u"FROM {} WHERE publish_time LIKE '{}%' "
-                   u"AND content LIKE '%{}%'"
-                   .format(cons.inter_table_name, yesterday, cons.UP))
+            sql = (cons.up_codes_sql.format(cons.inter_table_name, yesterday, cons.UP))
             x = cursor.execute(sql)
             result = cursor.fetchmany(x)
-            # codes = [item['code'] for item in result if cons.UP in item['content']]
             codes = {item['code']: item['pdf_url'] for item in result}
-            # for k,v in codes.items():
-            #     print k,v
     finally:
         connection.close()
         return codes
@@ -204,18 +200,19 @@ def plot_quota(code, macd, rsi, bbands):
     plt.savefig(cons.MACD_PLOT_RESULT + u'/' + code + u'.png', format=u'png')
 
 
-def get_useful_codes(code, macd, rsi, bbands):
+def get_useful_codes():
     useful_trade = {}
     for code, pdf in get_inter_codes().items():
         df = trade_data(code)
         macd = get_macd_info(df)
-        rsi = (get_rsi_info(df))[u'rsi']
+        rsi = get_rsi_info(df)
         bbands = get_bbands_info(df)
+        rsi_values = rsi[u'rsi']
         macds = macd[u'macd']
         macdsignal = macd[u'macdsignal']
         upperband = bbands[u'upperband']
         lowerband = bbands[u'lowerband']
-        if (rsi.iloc[-1] > rsi.iloc[-2]
+        if (rsi_values.iloc[-1] > rsi_values.iloc[-2]
             and upperband.iloc[-1] > upperband.iloc[-2]
             and lowerband.iloc[-1] < lowerband.iloc[-2]
             and macds.iloc[-1] > macds.iloc[-2]
@@ -230,19 +227,12 @@ def insert_to_table_useful(useful_trade):
     try:
         with connection.cursor() as cursor:
             for k, v in useful_trade.items():
-                sql = ('INSERT INTO {} (time,code,pdf) VALUES( %s, % s, % s)').format(cons.useful_table_name)
+                sql = cons.insert_useful_trade_sql.format(cons.usefule_table_name)
                 cursor.execute(sql, (today_str, k, v))
             connection.commit()
     finally:
         connection.close()
 
-    def up_codes():
-        up_codes = []
-        for code, pdf in get_inter_codes().items():
-            df = trade_data(code)
-            worths = plot_quota(code, get_macd_info(df), get_rsi_info(df), get_bbands_info(df))
-            if worths != None:
-                up_codes.append(worths)
-        return up_codes()
 
-    print up_codes
+useful_trade = get_useful_codes()
+insert_to_table_useful(useful_trade)
