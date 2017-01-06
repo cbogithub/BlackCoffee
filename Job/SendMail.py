@@ -8,48 +8,47 @@ Created on  12/5/16 10:57 PM
 
 @File: SendMail.py
 """
-import datetime
 import os
 import smtplib
 import sys
-from email import encoders
 from email.header import Header
-from email.mime.base import MIMEBase
+from email.mime.image import MIMEImage
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-
-import pandas as pd
 
 CONSTANTS_PATH = os.path.dirname(os.getcwd())
 sys.path.append(CONSTANTS_PATH)
 import Constants as cons
 
+data_path = os.path.join(cons.MACD_PLOT_RESULT, cons.today_str_Ymd)
+os.chdir(data_path)
 COMMASPACE = cons.SPLIT_ITEM1
-date_today = datetime.datetime.now().date()
-today = date_today.strftime("%Y%m%d")
-archive_path = cons.FILE_ARCHIVE
-data_path = os.path.join(archive_path, today + 'selected.csv')
-msg = MIMEMultipart()
-msg['Subject'] = Header("from yous\' hero", 'utf-8')
-df = pd.read_csv(data_path, index_col=False)
-info = df.to_string().encode('utf-8')
+for root, dirs, files in os.walk(data_path):
+    file_names = files
 
-msg.attach(MIMEText(info, 'plain', 'utf-8'))
 
-with open(data_path) as f:
-    mime = MIMEBase('file', 'csv', filename='selected.csv')
-    mime.add_header('Content-Disposition', 'attachment', filename='selected.csv')
-    mime.add_header('Content-ID', '<0>')
-    mime.add_header('X-Attachment-Id', '0')
-    mime.set_payload(f.read())
-    encoders.encode_base64(mime)
-    msg.attach(mime)
+def run_send(file_names):
+    msg = MIMEMultipart()
+    msg['Subject'] = Header("from yous\' hero", 'utf-8')
 
-to_addr = cons.TO_ADDR
-from_addr = cons.FROM_ADDR
-password = cons.PASSWORD
-# Send the email via our own SMTP server.
-s = smtplib.SMTP(cons.SMTP_SERVER, 25)
-s.login(from_addr, password)  # to login SMTP server.
-s.sendmail(from_addr, COMMASPACE.join(to_addr), msg.as_string())
-s.quit()
+    for item in file_names:
+        mail_msg = """
+        <p>""" + item + """</p><p><img src="cid:""" + item + """"></p>
+        """
+        msg.attach(MIMEText(mail_msg, u'html', u'utf-8'))
+        fp = open(item, u'rb')
+        msgImage = MIMEImage(fp.read())
+        fp.close()
+        msgImage.add_header('Content-ID', '<' + item + '>')
+        msg.attach(msgImage)
+
+    to_addr = cons.TO_ADDR
+    from_addr = cons.FROM_ADDR
+    password = cons.PASSWORD
+    # Send the email via our own SMTP server.
+    s = smtplib.SMTP(cons.SMTP_SERVER, 25)
+    s.login(from_addr, password)  # to login SMTP server.
+    s.sendmail(from_addr, to_addr, msg.as_string())
+    s.quit()
+
+run_send(file_names)
