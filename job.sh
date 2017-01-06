@@ -12,9 +12,9 @@ python ScrapyAnnouncement.py
 
 # plot the result
 cd ../Analysis
-python quota_analysis.py >> analysis.log
+python quota_analysis.py
 
 # send mail
 cd ../Job
-python SendMail.py  >> ../Analysis/analysis.log
+python SendMail.py
 #python SelectStrategy.py
