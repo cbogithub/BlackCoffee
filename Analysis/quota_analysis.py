@@ -24,9 +24,6 @@ CONSTANTS_PATH = os.path.dirname(os.getcwd())
 sys.path.append(CONSTANTS_PATH)
 import Constants as cons
 
-today = datetime.date.today()
-today_str = today.strftime(u'%Y-%m-%d')
-yesterday = (today - datetime.timedelta(days=1)).strftime("%m-%d")
 view_days = 14
 textsize = 9
 
@@ -51,7 +48,7 @@ def get_inter_codes():
     connection = conn_mysql()
     try:
         with connection.cursor() as cursor:
-            sql = (cons.up_codes_sql.format(cons.inter_table_name, yesterday, cons.UP))
+            sql = (cons.up_codes_sql.format(cons.inter_table_name, cons.yesterday_str_md, cons.UP))
             x = cursor.execute(sql)
             result = cursor.fetchmany(x)
             codes = {item['code']: item['pdf_url'] for item in result}
@@ -157,8 +154,6 @@ def plot_quota(code, macd, rsi, bbands):
     ax1.plot(date, macdsignal, 'k-')
     ax1.fill_between(date, hist, 0, facecolor=fillcolor, edgecolor=fillcolor)
     ax1.text(0.025, 0.95, u'MACD(12,26,9)', va=u'top', transform=ax1.transAxes, fontsize=textsize)
-    # ax1.set_title(u"{}'s quotaition".format(code))
-    # ax1.legend(loc='best')
 
     # plot rsi quotation.
     rsi = rsi[u'rsi']
@@ -196,8 +191,11 @@ def plot_quota(code, macd, rsi, bbands):
                 label.set_horizontalalignment('right')
 
                 ax.fmt_xdata = mdates.DateFormatter('%Y-%m-%d')
-
-    plt.savefig(cons.MACD_PLOT_RESULT + u'/' + code + u'.png', format=u'png')
+    data_path = os.path.join(cons.MACD_PLOT_RESULT, cons.today_str_Ymd)
+    if not os.path.exists(data_path):
+        os.mkdir(data_path)
+    data_path = os.path.join(data_path, code + u'.png')
+    plt.savefig(data_path, format=u'png')
 
 
 def get_useful_codes():
@@ -228,7 +226,7 @@ def insert_to_table_useful(useful_trade):
         with connection.cursor() as cursor:
             for k, v in useful_trade.items():
                 sql = cons.insert_useful_trade_sql.format(cons.usefule_table_name)
-                cursor.execute(sql, (today_str, k, v))
+                cursor.execute(sql, (cons.today_str_Ymd, k, v))
             connection.commit()
     finally:
         connection.close()
