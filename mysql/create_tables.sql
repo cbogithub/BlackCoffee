@@ -18,3 +18,8 @@ content         TEXT,
 pdf_url         VARCHAR(500)
 );
 
+CREATE TABLE useful_trade(
+datetime        CHAR(10),
+code            CHAR(6),
+pdf_url         VARCHAR(500)
+);
