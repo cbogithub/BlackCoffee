@@ -1,9 +1,10 @@
 #!/bin/bash
 
+TODAY_DATE=`date +%Y-%m-%d`
 export PYTHON_HOME="/home/imyin/anaconda2/bin/python"
 
-mypath="$(cd "$(dirname "$0")"; pwd)"
-cd $mypath
+my_path="$(cd "$(dirname "$0")"; pwd)"
+cd ${my_path}
 
 # crawl contents from web.
 cd Scrapy
@@ -12,9 +13,9 @@ python ScrapyAnnouncement.py
 
 # plot the result
 cd ../Analysis
-python quota_analysis.py
+python quota_analysis.py ${TODAY_DATE} >> analysis.log 2>&1
 
 # send mail
 cd ../Job
-python SendMail.py
+python SendMail.py ${TODAY_DATE}
 #python SelectStrategy.py
