@@ -20,7 +20,8 @@ CONSTANTS_PATH = os.path.dirname(os.getcwd())
 sys.path.append(CONSTANTS_PATH)
 import Constants as cons
 
-data_path = os.path.join(cons.MACD_PLOT_RESULT, cons.today_str_Ymd)
+today_time = sys.argv[1]
+data_path = os.path.join(cons.MACD_PLOT_RESULT, today_time)
 os.chdir(data_path)
 COMMASPACE = cons.SPLIT_ITEM1
 for root, dirs, files in os.walk(data_path):
@@ -29,7 +30,7 @@ for root, dirs, files in os.walk(data_path):
 
 def run_send(file_names):
     msg = MIMEMultipart()
-    msg['Subject'] = Header("from yous\' hero", 'utf-8')
+    msg[u'Subject'] = Header(u"from yous\' hero", u'utf-8')
 
     for item in file_names:
         mail_msg = """
@@ -39,7 +40,7 @@ def run_send(file_names):
         fp = open(item, u'rb')
         msgImage = MIMEImage(fp.read())
         fp.close()
-        msgImage.add_header('Content-ID', '<' + item + '>')
+        msgImage.add_header(u'Content-ID', u'<' + item + u'>')
         msg.attach(msgImage)
 
     to_addr = cons.TO_ADDR
