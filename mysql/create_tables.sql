@@ -21,5 +21,12 @@ pdf_url         VARCHAR(500)
 CREATE TABLE useful_trade(
 datetime        CHAR(10),
 code            CHAR(6),
-pdf_url         VARCHAR(500)
+open            FLOAT(8,4),
+close           FLOAT(8,4),
+high            FLOAT(8,5),
+low             FLOAT(8,4),
+volume          FLOAT(8,4)
 );
+
+
+-- trade_cal()
