@@ -11,6 +11,8 @@ Created on 12/15/16 11:12 PM
 import datetime
 import os
 import sys
+import requests
+import httplib
 
 import matplotlib
 import numpy as np
@@ -18,6 +20,7 @@ import pandas as pd
 import pymysql
 import talib as ta
 import tushare as ts
+from urllib import urlretrieve
 from multiprocessing.dummy import Pool as ThreadPool
 
 matplotlib.use('Agg')
@@ -32,9 +35,17 @@ import Constants as cons
 view_days = 14
 textsize = 9
 today_str_Ymd = sys.argv[1]
-
+today_str_md = sys.argv[2]
 
 # yesterday_str_md = sys.argv[2]
+
+plot_data_path = os.path.join(cons.PLOT_RESULT, today_str_Ymd)
+if not os.path.exists(plot_data_path):
+    os.mkdir(plot_data_path)
+
+pdf_data_path = os.path.join(cons.PDF_DOWNLOADED, today_str_Ymd)
+if not os.path.exists(pdf_data_path):
+    os.mkdir(pdf_data_path)
 
 
 def conn_mysql():
@@ -57,10 +68,12 @@ def get_inter_codes():
     connection = conn_mysql()
     try:
         with connection.cursor() as cursor:
-            sql = (cons.up_codes_sql.format(cons.inter_table_name, cons.yesterday_str_md, cons.UP))
+            sql = (cons.up_codes_sql.format(cons.inter_table_name, today_str_md, cons.UP))
             x = cursor.execute(sql)
             result = cursor.fetchmany(x)
-            codes = {item[u'code']: item[u'pdf_url'] for item in result}
+            codes = {item[u'code']: item[u'pdf_url']
+                                    + cons.SPLIT_ITEM5
+                                    + item[u'title'] for item in result}
     finally:
         connection.close()
         return codes
@@ -81,7 +94,7 @@ def get_inter_codes():
 
 
 def trade_data(code):
-    data = ts.get_hist_data(code, end=today_str_Ymd)
+    data = ts.get_hist_data(code, end=today_str_Ymd, retry_count=10)
     data[u'date'] = data.index
     data[u'code'] = code
 
@@ -142,7 +155,12 @@ def get_bbands_info(df):
                          u'lowerband': lowerband[-view_days:]})
 
 
-def plot_quota(code, macd, rsi, bbands):
+def plot_quota(code, file_name):
+    df = trade_data(code)
+    macd = get_macd_info(df)
+    rsi = get_rsi_info(df)
+    bbands = get_bbands_info(df)
+
     left, width = 0.1, 0.8
 
     rect3 = [left, 0.471, width, 0.479]
@@ -205,37 +223,19 @@ def plot_quota(code, macd, rsi, bbands):
                 label.set_horizontalalignment(u'right')
 
                 ax.fmt_xdata = mdates.DateFormatter('%Y-%m-%d')
-    data_path = os.path.join(cons.MACD_PLOT_RESULT, today_str_Ymd)
-    if not os.path.exists(data_path):
-        os.mkdir(data_path)
-    data_path = os.path.join(data_path, code + u'.png')
-    plt.savefig(data_path, format=u'png')
+
+    plot_data_path_result = os.path.join(plot_data_path, code + file_name + u'.png')
+    plt.savefig(plot_data_path_result, format=u'png')
     plt.close()
 
 
 def get_useful_codes():
     useful_trade = {}
-    for code, pdf in get_inter_codes().items():
+    for code, words in get_inter_codes().items():
         df = trade_data(code)
-        trade_time = df.date.values[-1]
-        last_close = df.close.values[-1]
-        macd = get_macd_info(df)
-        rsi = get_rsi_info(df)
-        bbands = get_bbands_info(df)
-        rsi_values = rsi[u'rsi']
-        macds = macd[u'macd']
-        macdsignal = macd[u'macdsignal']
-        upperband = bbands[u'upperband']
-        lowerband = bbands[u'lowerband']
-        if (trade_time == u'2017-01-06'
-            and last_close <= 15
-            and rsi_values.iloc[-1] > rsi_values.iloc[-2]
-            and upperband.iloc[-1] > upperband.iloc[-2]
-            and lowerband.iloc[-1] < lowerband.iloc[-2]
-            and macds.iloc[-1] > macds.iloc[-2]
-            and macdsignal.iloc[-1] - macds.iloc[-1]) < 0.02:
-            useful_trade[code] = pdf
-            plot_quota(code, macd, rsi, bbands)
+        if len(df) > 60 and df.date.values[-1] == today_str_Ymd:
+            useful_trade[code] = words
+
     return useful_trade
 
 
@@ -254,19 +254,23 @@ def get_useful_codes_allday(code):
         bbands = get_bbands_info(df)
         rsi_values = rsi[u'rsi']
         macds = macd[u'macd']
-        macdsignal = macd[u'macdsignal']
+        # macdsignal = macd[u'macdsignal']
+        hist = macd[u'hist']
         upperband = bbands[u'upperband']
         lowerband = bbands[u'lowerband']
+        hist_value = hist.iloc[-1]
         if (today_time == today_str_Ymd
             and last_close <= 15
             and rsi_values.iloc[-1] > rsi_values.iloc[-2]
             and upperband.iloc[-1] > upperband.iloc[-2]
             and lowerband.iloc[-1] < lowerband.iloc[-2]
             and macds.iloc[-1] > macds.iloc[-2]
-            and 0 < (macdsignal.iloc[-1] - macds.iloc[-1]) < 0.025):
+            and -0.025 < hist_value < 0):
             plot_quota(code, macd, rsi, bbands)
             useful_data = df.iloc[-1]
             return useful_data
+        else:
+            print u"{}'s hist[-1] is {}".format(code, hist_value)
 
 
 def insert_to_table_useful(useful_trade):
@@ -288,12 +292,21 @@ def insert_to_table_useful(useful_trade):
         connection.close()
 
 
+# time1 = datetime.datetime.now()
+# codes = get_today_codes()
+# pool = ThreadPool(32)
+# results = pool.map(get_useful_codes_allday, codes)
+# pool.close()
+# pool.join()
+# # insert_to_table_useful(results)
+# time2 = datetime.datetime.now()
+# print (u"\nIt costs {} sec to run it.\nToday is {}...".format((time2 - time1).total_seconds(), today_str_Ymd))
+
 time1 = datetime.datetime.now()
-codes = get_today_codes()
-pool = ThreadPool(32)
-results = pool.map(get_useful_codes_allday, codes)
-pool.close()
-pool.join()
-insert_to_table_useful(results)
+codes = get_useful_codes()
+
+for item in codes:
+    file_name = codes[item].split(cons.SPLI T_ITEM5)[1]
+    plot_quota(item, file_name)
 time2 = datetime.datetime.now()
 print (u"\nIt costs {} sec to run it.\nToday is {}...".format((time2 - time1).total_seconds(), today_str_Ymd))
