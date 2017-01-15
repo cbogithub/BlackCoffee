@@ -16,12 +16,13 @@ from email.mime.image import MIMEImage
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
+# must use absolute path.
 CONSTANTS_PATH = os.path.dirname(os.getcwd())
 sys.path.append(CONSTANTS_PATH)
 import Constants as cons
 
 today_time = sys.argv[1]
-data_path = os.path.join(cons.MACD_PLOT_RESULT, today_time)
+data_path = os.path.join(cons.PLOT_RESULT, today_time)
 os.chdir(data_path)
 COMMASPACE = cons.SPLIT_ITEM1
 for root, dirs, files in os.walk(data_path):
