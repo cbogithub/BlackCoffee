@@ -306,7 +306,13 @@ time1 = datetime.datetime.now()
 codes = get_useful_codes()
 
 for item in codes:
-    file_name = codes[item].split(cons.SPLI T_ITEM5)[1]
+    lines = codes[item].split(cons.SPLIT_ITEM5)
+    file_name = lines[1]
+    pdf = lines[0]
+    words = pdf.split(cons.SPLIT_ITEM6)
+    words[3] = u"ggdl"
+    new_pdf = cons.SPLIT_ITEM6.join(words)
+    urlretrieve(new_pdf, pdf_data_path + u"/" + file_name + u".pdf")
     plot_quota(item, file_name)
 time2 = datetime.datetime.now()
 print (u"\nIt costs {} sec to run it.\nToday is {}...".format((time2 - time1).total_seconds(), today_str_Ymd))
