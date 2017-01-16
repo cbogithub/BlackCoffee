@@ -34,14 +34,12 @@ def run_send(file_names):
     msg[u'Subject'] = Header(u"from yous\' hero", u'utf-8')
 
     for item in file_names:
-        mail_msg = """
-        <p>""" + item + """</p><p><img src="cid:""" + item + """"></p>
-        """
+        mail_msg = u'<p>{}</p><p><img src="cid:{}"></p>'.format(item, item)
         msg.attach(MIMEText(mail_msg, u'html', u'utf-8'))
         fp = open(item, u'rb')
         msgImage = MIMEImage(fp.read())
         fp.close()
-        msgImage.add_header(u'Content-ID', u'<' + item + u'>')
+        msgImage.add_header(u'Content-ID', u'<{}>'.format(item[:6]))
         msg.attach(msgImage)
 
     to_addr = cons.TO_ADDR
@@ -52,5 +50,6 @@ def run_send(file_names):
     s.login(from_addr, password)  # to login SMTP server.
     s.sendmail(from_addr, to_addr, msg.as_string())
     s.quit()
+
 
 run_send(file_names)
