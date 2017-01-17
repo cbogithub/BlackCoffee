@@ -11,8 +11,6 @@ Created on 12/15/16 11:12 PM
 import datetime
 import os
 import sys
-import requests
-import httplib
 
 import matplotlib
 import numpy as np
@@ -31,6 +29,7 @@ import matplotlib.pyplot as plt
 CONSTANTS_PATH = os.path.dirname(os.getcwd())
 sys.path.append(CONSTANTS_PATH)
 import Constants as cons
+
 
 view_days = 14
 textsize = 9

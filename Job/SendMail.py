@@ -23,6 +23,8 @@ sys.path.append(CONSTANTS_PATH)
 import Constants as cons
 
 today_time = sys.argv[1]
+today_str_md = sys.argv[2]
+
 plot_data_path = os.path.join(cons.PLOT_RESULT, today_time)
 pdf_data_path = os.path.join(cons.PDF_DOWNLOADED, today_time)
 os.chdir(plot_data_path)
@@ -31,13 +33,25 @@ for root, dirs, files in os.walk(plot_data_path):
     file_names = files
 
 
+def get_content_dict():
+    connection = cons.conn_mysql()
+    try:
+        with connection.cursor() as cursor:
+            sql = (cons.content_dict.format(cons.inter_table_name, today_str_md, cons.UP))
+            x = cursor.execute(sql)
+            result = cursor.fetchmany(x)
+            return {item[u'title']: item[u'content'] for item in result}
+    finally:
+        connection.close()
+
+
 def run_send(file_names):
+    dict_contents = get_content_dict()
     msg = MIMEMultipart()
     msg[u'Subject'] = Header(u"Today has {} messages.".format(len(file_names)), u'utf-8')
-    msg[u'To'] = cons.TO_ADDR
 
     for item in file_names:
-        mail_msg = u'<p>{}</p><p><img src="cid:{}"></p>'.format(item, item)
+        mail_msg = u'<p>{}<br>{}</p><p><img src="cid:{}"></p>'.format(item, dict_contents[item[6:-4]], item)
         msg.attach(MIMEText(mail_msg, u'html', u'utf-8'))
         fp = open(item, u'rb')
         msgImage = MIMEImage(fp.read())
