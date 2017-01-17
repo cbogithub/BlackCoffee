@@ -33,7 +33,8 @@ for root, dirs, files in os.walk(plot_data_path):
 
 def run_send(file_names):
     msg = MIMEMultipart()
-    msg[u'Subject'] = Header(u"from yous\' hero", u'utf-8')
+    msg[u'Subject'] = Header(u"Today has {} messages.".format(len(file_names)), u'utf-8')
+    msg[u'To'] = cons.TO_ADDR
 
     for item in file_names:
         mail_msg = u'<p>{}</p><p><img src="cid:{}"></p>'.format(item, item)
