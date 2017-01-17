@@ -23,9 +23,9 @@ datetime        CHAR(10),
 code            CHAR(6),
 open            FLOAT(8,4),
 close           FLOAT(8,4),
-high            FLOAT(8,5),
+high            FLOAT(8,4),
 low             FLOAT(8,4),
-volume          FLOAT(8,4)
+volume          FLOAT(12,6)
 );
 
 
