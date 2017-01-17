@@ -30,7 +30,6 @@ CONSTANTS_PATH = os.path.dirname(os.getcwd())
 sys.path.append(CONSTANTS_PATH)
 import Constants as cons
 
-
 view_days = 14
 textsize = 9
 today_str_Ymd = sys.argv[1]
@@ -47,24 +46,8 @@ if not os.path.exists(pdf_data_path):
     os.mkdir(pdf_data_path)
 
 
-def conn_mysql():
-    """
-    To connect the mysql.
-    Attentions: charset is a important parameter.
-
-    :return: connection
-    """
-    connection = pymysql.connect(host=cons.mysql_host,
-                                 user=cons.mysql_user,
-                                 password=cons.mysql_passwd,
-                                 db=cons.stock_db,
-                                 charset='utf8',
-                                 cursorclass=pymysql.cursors.DictCursor)
-    return connection
-
-
 def get_inter_codes():
-    connection = conn_mysql()
+    connection = cons.conn_mysql()
     try:
         with connection.cursor() as cursor:
             sql = (cons.up_codes_sql.format(cons.inter_table_name, today_str_md, cons.UP))
@@ -273,7 +256,7 @@ def get_useful_codes_allday(code):
 
 
 def insert_to_table_useful(useful_trade):
-    connection = conn_mysql()
+    connection = cons.conn_mysql()
     try:
         with connection.cursor() as cursor:
             for line in useful_trade:
