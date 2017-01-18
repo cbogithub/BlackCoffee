@@ -217,7 +217,6 @@ def get_useful_codes():
         df = trade_data(code)
         if len(df) > 60 and df.date.values[-1] == today_str_Ymd:
             useful_trade[code] = words
-
     return useful_trade
 
 
