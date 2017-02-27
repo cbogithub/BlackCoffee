@@ -34,6 +34,7 @@ view_days = 14
 textsize = 9
 today_str_Ymd = sys.argv[1]
 today_str_md = sys.argv[2]
+tomorrow_str_Ymd = sys.srgv[3]
 
 # yesterday_str_md = sys.argv[2]
 
@@ -42,8 +43,11 @@ if not os.path.exists(plot_data_path):
     os.mkdir(plot_data_path)
 
 pdf_data_path = os.path.join(cons.PDF_DOWNLOADED, today_str_Ymd)
+an_pdf_data_path = os.path.join(cons.cons.PDF_AN_DOWNLOADED)
 if not os.path.exists(pdf_data_path):
     os.mkdir(pdf_data_path)
+if not os.path.exists(an_pdf_data_path):
+    os.mkdir(an_pdf_data_path)
 
 
 def get_inter_codes():
@@ -61,18 +65,19 @@ def get_inter_codes():
         return codes
 
 
-# def get_announ_codes():
-#     connection = conn_mysql()
-#     try:
-#         with connection.cursor() as cursor:
-#             sql = u"SELECT code, content FROM {}".format(cons.announ_table_name)
-#             x = cursor.execute(sql)
-#             result = cursor.fetchmany(x)
-#             codes = [item['code'] for item in result if cons.UP in item['content']]
-#             # print len(codes)
-#     finally:
-#         connection.close()
-#         return codes
+def get_announ_codes():
+    connection = cons.conn_mysql()
+    try:
+        with connection.cursor() as cursor:
+            sql = (cons.conn_table_sql.format(cons.announ_table_name, tomorrow_str_Ymd))
+            x = cursor.execute(sql)
+            result = cursor.fetchmany(x)
+            codes = {item['code']: item[u'pdf_url']
+                                   + cons.SPLIT_ITEM5
+                                   + item[u'title'] for item in result}
+    finally:
+        connection.close()
+        return codes
 
 
 def trade_data(code):
@@ -284,10 +289,17 @@ def insert_to_table_useful(useful_trade):
 # print (u"\nIt costs {} sec to run it.\nToday is {}...".format((time2 - time1).total_seconds(), today_str_Ymd))
 
 time1 = datetime.datetime.now()
-codes = get_useful_codes()
+inter_codes = get_useful_codes()
+announ_codes = get_announ_codes()
 
-for item in codes:
-    lines = codes[item].split(cons.SPLIT_ITEM5)
+for item in announ_codes:
+    words_announ = announ_codes[item].split(cons.SPLIT_ITEM5)
+    an_file_name = words_announ[1]
+    an_pdf = words_announ[0]
+    urlretrieve(an_pdf, an_pdf_data_path + u"/" + an_file_name + u".pdf")
+
+for item in inter_codes:
+    lines = inter_codes[item].split(cons.SPLIT_ITEM5)
     file_name = lines[1]
     pdf = lines[0]
     words = pdf.split(cons.SPLIT_ITEM6)
