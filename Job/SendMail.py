@@ -40,6 +40,7 @@ def get_content_dict():
             sql = (cons.content_dict.format(cons.inter_table_name, today_str_md, cons.UP))
             x = cursor.execute(sql)
             result = cursor.fetchmany(x)
+            # Collect the contents of article.
             return {item[u'title']: item[u'content'] for item in result}
     finally:
         connection.close()
@@ -51,6 +52,7 @@ def run_send(file_names):
     msg[u'Subject'] = Header(u"Today has {} messages.".format(len(file_names)), u'utf-8')
 
     for item in file_names:
+        # Embed the picture in text.
         mail_msg = u'<p>{}<br>{}</p><p><img src="cid:{}"></p>'.format(item, dict_contents[item[6:-4]], item)
         msg.attach(MIMEText(mail_msg, u'html', u'utf-8'))
         fp = open(item, u'rb')
@@ -59,6 +61,7 @@ def run_send(file_names):
         msgImage.add_header(u'Content-ID', u'<{}>'.format(item[:6]))
         msg.attach(msgImage)
 
+    # Add attachment into e-mail.
     part = MIMEApplication(open(pdf_data_path + u".zip", u'rb').read())
     part.add_header('Content-Disposition', 'attachment', filename=today_time + u".zip")
     msg.attach(part)
