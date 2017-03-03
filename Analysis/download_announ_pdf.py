@@ -20,7 +20,6 @@ sys.path.append(CONSTANTS_PATH)
 import Constants as cons
 
 today_str_Ymd = sys.argv[1]
-tomorrow_str_Ymd = sys.argv[2]
 
 an_pdf_data_path = os.path.join(cons.AN_PDF_DOWNLOADED, today_str_Ymd)
 if not os.path.exists(an_pdf_data_path):
@@ -31,7 +30,7 @@ def get_announ_codes():
     connection = cons.conn_mysql()
     try:
         with connection.cursor() as cursor:
-            sql = (cons.conn_table_sql.format(cons.announ_table_name, tomorrow_str_Ymd))
+            sql = (cons.conn_table_sql.format(cons.announ_table_name, today_str_Ymd))
             x = cursor.execute(sql)
             result = cursor.fetchmany(x)
             codes = {item['content']: item[u'pdf_url']
@@ -49,10 +48,10 @@ def download_it(info):
 
 announ_codes = get_announ_codes()
 
-# for item in announ_codes:
-#     download_it(item)
-pool = ThreadPool(32)
-results = pool.map(download_it, announ_codes)
-pool.close()
-pool.join()
+for item in announ_codes:
+    download_it(item)
+# pool = ThreadPool(32)
+# results = pool.map(download_it, announ_codes)
+# pool.close()
+# pool.join()
 
