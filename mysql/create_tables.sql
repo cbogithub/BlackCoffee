@@ -28,5 +28,12 @@ low             FLOAT(8,4),
 volume          FLOAT(12,6)
 );
 
+CREATE TABLE news_everyday_2017(
+date            CHAR(10),    
+collect_time    CHAR(6),     
+title           VARCHAR(200),
+content         VARCHAR(5000)
+);
+
 
 -- trade_cal()
