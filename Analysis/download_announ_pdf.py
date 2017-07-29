@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/home/imyin/python_env/newspaper_python3/bin/python
 # -*- coding: utf-8 -*-
 
 """
@@ -14,7 +14,7 @@ import sys
 import time
 import datetime
 from multiprocessing.dummy import Pool as ThreadPool
-from urllib import urlretrieve
+from urllib.request import urlretrieve
 
 # must use absolute path..
 CONSTANTS_PATH = os.path.dirname(os.getcwd())
@@ -38,9 +38,9 @@ def get_announ_codes():
             codes = {item['content']: item[u'pdf_url']
                                       + cons.SPLIT_ITEM5
                                       + item[u'content'] for item in result}
+        return codes
     finally:
         connection.close()
-        return codes
 
 
 def download_it(info, retry=10):
@@ -50,19 +50,22 @@ def download_it(info, retry=10):
     download_path = an_pdf_data_path + u"/" + an_file_name + u".pdf"
     for _ in range(retry):
         time.sleep(0.01)
-        urlretrieve(an_pdf, download_path)
-        if os.path.getsize(download_path) / 1024 > 2.0:
-            break
+        try:
+            urlretrieve(an_pdf, download_path)
+            if os.path.getsize(download_path) / 1024 > 2.0:
+                break
+        except Exception as e:
+            pass
 
+if __name__ == '__main__':
+    announ_codes = get_announ_codes()
 
-announ_codes = get_announ_codes()
-
-# for item in announ_codes:
-#     download_it(item)
-time1 = datetime.datetime.now()
-pool = ThreadPool(8)
-results = pool.map(download_it, announ_codes)
-pool.close()
-pool.join()
-time2 = datetime.datetime.now()
-print (u"\nIt costs {} sec to run it.\nToday is {}...".format((time2 - time1).total_seconds(), today_str_Ymd))
+    # for item in announ_codes:
+    #     download_it(item)
+    time1 = datetime.datetime.now()
+    pool = ThreadPool(8)
+    results = pool.map(download_it, announ_codes)
+    pool.close()
+    pool.join()
+    time2 = datetime.datetime.now()
+    print (u"\nIt costs {} sec to run it.\nToday is {}...".format((time2 - time1).total_seconds(), today_str_Ymd))

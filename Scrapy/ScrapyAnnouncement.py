@@ -12,7 +12,7 @@ import datetime
 import os
 import sys
 import time
-from urlparse import urlparse
+from urllib.parse import urlparse
 
 import numpy as np
 import pandas as pd
@@ -65,11 +65,11 @@ class ScrapyAnnouncement:
                 for item in content:
                     try:
                         con = item.find_all("a")
-                        s_code = item.find("span", {"class": "code"}).text.encode('utf-8')
+                        s_code = item.find("span", {"class": "code"}).text
                         stock_code.append(s_code.strip("\n"))
                         pdf_url.append(URL_SCHEME + "://" + URL_Net + "/" + con[1].attrs["href"])
                         news_title.append(con[1].attrs["title"].encode('utf-8'))
-                        published = item.find("span", {"class": "time"}).text.encode('utf-8')
+                        published = item.find("span", {"class": "time"}).text
                         publish_time.append(published.strip("()"))
                     except Exception as e:
                         pass

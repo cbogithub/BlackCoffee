@@ -4,14 +4,14 @@ GRANT ALL ON stock.* TO 'stock'@'localhost';
 
 USE stock;
 
-CREATE TABLE announcement_201612(
+CREATE TABLE announcement_2017(
 publish_time    CHAR(10),
 code            CHAR(6),
 content         TEXT,
 pdf_url         VARCHAR(500)
 );
 
-CREATE TABLE interpretation201612(
+CREATE TABLE interpretation_2017(
 publish_time    CHAR(10),
 code            CHAR(6),
 content         TEXT,
