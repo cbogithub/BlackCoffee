@@ -28,7 +28,7 @@ import matplotlib.pyplot as plt
 # must use absolute path..
 CONSTANTS_PATH = os.path.dirname(os.getcwd())
 sys.path.append(CONSTANTS_PATH)
-import Constants as cons
+import constants as cons
 
 view_days = 14
 textsize = 9

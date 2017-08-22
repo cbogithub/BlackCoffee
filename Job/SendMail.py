@@ -20,7 +20,7 @@ from email.mime.application import MIMEApplication
 # must use absolute path.
 CONSTANTS_PATH = os.path.dirname(os.getcwd())
 sys.path.append(CONSTANTS_PATH)
-import Constants as cons
+import constants as cons
 
 today_time = sys.argv[1]
 today_str_md = sys.argv[2]

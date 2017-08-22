@@ -13,7 +13,7 @@ import sys
 
 CONSTANTS_PATH = os.path.dirname(os.getcwd())
 sys.path.append(CONSTANTS_PATH)
-import Constants as cons
+import constants as cons
 
 QUOTA_PATH=cons.ANALYSIS_PATH
 sys.path.append(QUOTA_PATH)

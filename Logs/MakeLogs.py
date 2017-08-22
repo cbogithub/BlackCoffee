@@ -15,7 +15,7 @@ from JobLogging import JobLogging
 
 CONSTANTS_PATH = os.path.dirname(os.getcwd())
 sys.path.append(CONSTANTS_PATH)
-import Constants as cons
+import constants as cons
 
 
 class Logs:

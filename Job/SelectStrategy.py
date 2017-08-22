@@ -14,7 +14,7 @@ import os, sys, datetime
 
 CONSTANTS_PATH = os.path.dirname(os.getcwd())
 sys.path.append(CONSTANTS_PATH)
-import Constants as cons
+import constants as cons
 
 date_today = datetime.datetime.now().date()
 today = date_today.strftime("%Y%m%d")

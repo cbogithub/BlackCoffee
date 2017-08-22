@@ -22,7 +22,7 @@ import Utils as utils
 
 CONSTANTS_PATH = os.path.dirname(os.getcwd())
 sys.path.append(CONSTANTS_PATH)
-import Constants as cons
+import constants as cons
 
 LOGGING_PATH = cons.LOGGING_PATH
 sys.path.append(LOGGING_PATH)
