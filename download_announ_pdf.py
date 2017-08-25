@@ -19,6 +19,7 @@ from urllib.request import urlretrieve
 # must use absolute path..
 # CONSTANTS_PATH = os.path.dirname(os.getcwd())
 # sys.path.append(CONSTANTS_PATH)
+import Scrapy.Utils
 import constants as cons
 
 today_str_Ymd = sys.argv[1]
@@ -29,7 +30,7 @@ if not os.path.exists(an_pdf_data_path):
 
 
 def get_announ_codes():
-    connection = cons.conn_mysql()
+    connection = Scrapy.Utils.conn_mysql()
     try:
         with connection.cursor() as cursor:
             sql = (cons.conn_table_sql.format(cons.announ_table_name, today_str_Ymd))

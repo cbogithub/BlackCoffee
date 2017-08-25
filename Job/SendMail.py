@@ -18,6 +18,8 @@ from email.mime.text import MIMEText
 from email.mime.application import MIMEApplication
 
 # must use absolute path.
+import Scrapy.Utils
+
 CONSTANTS_PATH = os.path.dirname(os.getcwd())
 sys.path.append(CONSTANTS_PATH)
 import constants as cons
@@ -34,7 +36,7 @@ for root, dirs, files in os.walk(plot_data_path):
 
 
 def get_content_dict():
-    connection = cons.conn_mysql()
+    connection = Scrapy.Utils.conn_mysql()
     try:
         with connection.cursor() as cursor:
             sql = (cons.content_dict.format(cons.inter_table_name, today_str_md, cons.UP))

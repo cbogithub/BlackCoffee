@@ -21,6 +21,8 @@ import tushare as ts
 from urllib import urlretrieve
 from multiprocessing.dummy import Pool as ThreadPool
 
+import Scrapy.Utils
+
 matplotlib.use('Agg')
 import matplotlib.dates as mdates
 import matplotlib.pyplot as plt
@@ -47,7 +49,7 @@ if not os.path.exists(pdf_data_path):
 
 
 def get_inter_codes():
-    connection = cons.conn_mysql()
+    connection = Scrapy.Utils.conn_mysql()
     try:
         with connection.cursor() as cursor:
             sql = (cons.up_codes_sql.format(cons.inter_table_name, today_str_md, cons.UP))
@@ -241,7 +243,7 @@ def get_useful_codes_allday(code):
 
 
 def insert_to_table_useful(useful_trade):
-    connection = cons.conn_mysql()
+    connection = Scrapy.Utils.conn_mysql()
     try:
         with connection.cursor() as cursor:
             for line in useful_trade:
