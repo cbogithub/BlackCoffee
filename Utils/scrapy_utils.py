@@ -6,7 +6,7 @@ Created on  12/4/16 4:50 PM
 
 @author: IMYin
 
-@File: Utils.py
+@File: scrapy_utils.py
 """
 
 import numpy as np

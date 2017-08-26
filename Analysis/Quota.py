@@ -11,17 +11,15 @@ Created on 12/15/16 11:12 PM
 import datetime
 import os
 import sys
+from urllib import urlretrieve
 
 import matplotlib
 import numpy as np
 import pandas as pd
-import pymysql
 import talib as ta
 import tushare as ts
-from urllib import urlretrieve
-from multiprocessing.dummy import Pool as ThreadPool
 
-import Scrapy.Utils
+import Utils.scrapy_utils
 
 matplotlib.use('Agg')
 import matplotlib.dates as mdates
@@ -49,7 +47,7 @@ if not os.path.exists(pdf_data_path):
 
 
 def get_inter_codes():
-    connection = Scrapy.Utils.conn_mysql()
+    connection = Utils.scrapy_utils.conn_mysql()
     try:
         with connection.cursor() as cursor:
             sql = (cons.up_codes_sql.format(cons.inter_table_name, today_str_md, cons.UP))
@@ -243,7 +241,7 @@ def get_useful_codes_allday(code):
 
 
 def insert_to_table_useful(useful_trade):
-    connection = Scrapy.Utils.conn_mysql()
+    connection = Utils.scrapy_utils.conn_mysql()
     try:
         with connection.cursor() as cursor:
             for line in useful_trade:

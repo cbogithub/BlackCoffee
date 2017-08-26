@@ -17,7 +17,7 @@ from email.mime.image import MIMEImage
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
-import Scrapy.Utils
+import Utils.scrapy_utils
 import constants as cons
 
 today_time = sys.argv[1]
@@ -32,7 +32,7 @@ for root, dirs, files in os.walk(plot_data_path):
 
 
 def get_content_dict():
-    connection = Scrapy.Utils.conn_mysql()
+    connection = Utils.scrapy_utils.conn_mysql()
     try:
         with connection.cursor() as cursor:
             sql = (cons.content_dict.format(cons.inter_table_name, today_str_md, cons.UP))

@@ -9,17 +9,17 @@ Created on 3/1/17 7:53 PM
 @File: download_announ_pdf
 """
 
+import datetime
 import os
 import sys
 import time
-import datetime
 from multiprocessing.dummy import Pool as ThreadPool
 from urllib.request import urlretrieve
 
 # must use absolute path..
 # CONSTANTS_PATH = os.path.dirname(os.getcwd())
 # sys.path.append(CONSTANTS_PATH)
-import Scrapy.Utils
+import Utils.scrapy_utils
 import constants as cons
 
 today_str_Ymd = sys.argv[1]
@@ -30,7 +30,7 @@ if not os.path.exists(an_pdf_data_path):
 
 
 def get_announ_codes():
-    connection = Scrapy.Utils.conn_mysql()
+    connection = Utils.scrapy_utils.conn_mysql()
     try:
         with connection.cursor() as cursor:
             sql = (cons.conn_table_sql.format(cons.announ_table_name, today_str_Ymd))

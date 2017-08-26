@@ -18,18 +18,18 @@ import numpy as np
 import pandas as pd
 import pymysql.cursors
 
-import Scrapy.Utils as utils
 import constants as cons
 from Logs.JobLogging import JobLogging
 
-URL = cons.RAW_URL_OF_ANNOUNCEMENT
-URL_Net = urlparse(URL).netloc
-URL_SCHEME = urlparse(URL).scheme
+
 
 
 class ScrapyAnnouncement:
     # initial log
     def __init__(self, log_lev='INFO'):
+        self.URL = cons.RAW_URL_OF_ANNOUNCEMENT
+        self.URL_Net = urlparse(self.URL).netloc
+        self.URL_SCHEME = urlparse(self.URL).scheme
         date_today = datetime.datetime.now().date()
         self.log_name = os.path.splitext(os.path.split(sys.argv[0])[1])[0]
         log_dir = cons.TASK_LOG_PATH
@@ -40,9 +40,9 @@ class ScrapyAnnouncement:
                 os.makedirs(log_dir)
             except:
                 pass
-        mylog = JobLogging(self.log_name, log_dir)
-        mylog.set_level(log_lev)
-        self.log = mylog.get_logger()
+        my_log = JobLogging(self.log_name, log_dir)
+        my_log.set_level(log_lev)
+        self.log = my_log.get_logger()
         self.log.info("ScrapyAnnouncement's log create success.")
 
     def info(self):
@@ -52,7 +52,7 @@ class ScrapyAnnouncement:
         stock_code = []
         for item in range(1, 9):
             data = {"__EVENTTARGET": "pagerQuestion", "__EVENTARGUMENT": str(item)}
-            bsObj = utils.conn_post(URL, data=data)
+            bsObj = Utils.conn_post(URL, data=data)
             try:
                 content = bsObj.find("ul", {"class": "gg-list"}).find_all("li")
                 time.sleep(np.random.rand(1))
@@ -61,7 +61,7 @@ class ScrapyAnnouncement:
                         con = item.find_all("a")
                         s_code = item.find("span", {"class": "code"}).text
                         stock_code.append(s_code.strip("\n"))
-                        pdf_url.append(URL_SCHEME + "://" + URL_Net + "/" + con[1].attrs["href"])
+                        pdf_url.append(self.URL_SCHEME + "://" + self.URL_Net + "/" + con[1].attrs["href"])
                         news_title.append(con[1].attrs["title"].encode('utf-8'))
                         published = item.find("span", {"class": "time"}).text
                         publish_time.append(published.strip("()"))
@@ -112,7 +112,6 @@ class ScrapyAnnouncement:
 
 if __name__ == '__main__':
     time1 = datetime.datetime.now()
-    rawUrl = cons.RAW_URL_OF_INTERPRETATION
     run = ScrapyAnnouncement()
     run.insert_to_table(run.info())
     time2 = datetime.datetime.now()
