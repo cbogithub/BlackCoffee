@@ -152,5 +152,5 @@ if __name__ == '__main__':
     run = ScrapyInterpretation()
     run.insert_to_table(run.update_df(rawUrl))
     time2 = datetime.datetime.now()
-    run.log.info(u"It costs {} sec to run it.".format((time2 - time1).total_seconds()))
+    run.log.info(u"It costs {} sec to download_it it.".format((time2 - time1).total_seconds()))
     run.log.info(u"-" * 100)

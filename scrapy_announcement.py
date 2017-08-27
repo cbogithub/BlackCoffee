@@ -115,5 +115,5 @@ if __name__ == '__main__':
     run = ScrapyAnnouncement()
     run.insert_to_table(run.info())
     time2 = datetime.datetime.now()
-    run.log.info(u"It costs {} sec to run it.".format((time2 - time1).total_seconds()))
+    run.log.info(u"It costs {} sec to download_it it.".format((time2 - time1).total_seconds()))
     run.log.info(u"-" * 100)

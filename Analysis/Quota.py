@@ -267,7 +267,7 @@ def insert_to_table_useful(useful_trade):
 # pool.join()
 # # insert_to_table_useful(results)
 # time2 = datetime.datetime.now()
-# print (u"\nIt costs {} sec to run it.\nToday is {}...".format((time2 - time1).total_seconds(), today_str_Ymd))
+# print (u"\nIt costs {} sec to download_it it.\nToday is {}...".format((time2 - time1).total_seconds(), today_str_Ymd))
 
 time1 = datetime.datetime.now()
 inter_codes = get_useful_codes()
@@ -282,4 +282,4 @@ for item in inter_codes:
     urlretrieve(new_pdf, pdf_data_path + u"/" + file_name + u".pdf")
     plot_quota(item, file_name)
 time2 = datetime.datetime.now()
-print (u"\nIt costs {} sec to run it.\nToday is {}...".format((time2 - time1).total_seconds(), today_str_Ymd))
+print (u"\nIt costs {} sec to download_it it.\nToday is {}...".format((time2 - time1).total_seconds(), today_str_Ymd))

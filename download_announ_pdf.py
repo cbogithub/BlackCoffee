@@ -69,4 +69,4 @@ if __name__ == '__main__':
     pool.close()
     pool.join()
     time2 = datetime.datetime.now()
-    print (u"\nIt costs {} sec to run it.\nToday is {}...".format((time2 - time1).total_seconds(), today_str_Ymd))
+    print (u"\nIt costs {} sec to download_it it.\nToday is {}...".format((time2 - time1).total_seconds(), today_str_Ymd))
