@@ -30,8 +30,7 @@ class GetAnnData:
         self.URL_Net = urlparse(self.URL).netloc
         self.URL_SCHEME = urlparse(self.URL).scheme
         self.log_name = os.path.splitext(os.path.split(sys.argv[0])[1])[0]
-        self.date_today = datetime.datetime.now().date()
-        self.today = self.date_today.strftime("%Y-%m-%d")
+        self.today = sys.argv[1]
         self.page_num = 0
         # self.today = '2017-08-26'
         log_dir = cons.TASK_LOG_PATH
@@ -118,7 +117,7 @@ class GetAnnData:
                                          row[u'SECURITYTYPE'],
                                          row[u'COLUMNNAME'],
                                          row[u'URL']))
-                    connection.commit()
+            connection.commit()
         finally:
             connection.close()
 

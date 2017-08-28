@@ -29,9 +29,7 @@ class DownloadAnn:
         self.URL_Net = urlparse(self.URL).netloc
         self.URL_SCHEME = urlparse(self.URL).scheme
         self.log_name = os.path.splitext(os.path.split(sys.argv[0])[1])[0]
-        self.date_today = datetime.datetime.now().date()
-        self.today = self.date_today.strftime("%Y-%m-%d")
-        # self.today = '2017-08-26'
+        self.today = sys.argv[1]
         self.an_pdf_data_path = os.path.join(cons.ANN_EAST_MONEY_DOWNLOADED, self.today)
         if not os.path.exists(self.an_pdf_data_path):
             os.mkdir(self.an_pdf_data_path)
@@ -121,6 +119,6 @@ if __name__ == '__main__':
     pool.close()
     pool.join()
     time2 = datetime.datetime.now()
-    print(
-        "\nIt costs {} sec to download_it it.\nToday is {}...".format((time2 - time1).total_seconds(), today_str_Ymd))
-    print("=======================>DOWNLOAD PDF ({}) OK!<=======================".format(run.today))
+    run.log.info("We get {} files ...\n".format(len(result_dict)))
+    run.log.info("It costs {} sec to download it.\n".format((time2 - time1).total_seconds()))
+    run.log.info("=======================>DOWNLOAD PDF ({}) is OK!<=======================".format(run.today))

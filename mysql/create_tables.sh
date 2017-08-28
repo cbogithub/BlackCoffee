@@ -2,7 +2,8 @@
 
 # Define the variable of time to create table.
 current_time=`date +%Y%m`
-
+#current_time=201709
+current_year=`date +%Y`
 
 # Define the variables of mysql.
 MYSQL=`which mysql`
@@ -17,7 +18,7 @@ my_path=`dirname $PWD`
 cd $my_path
 
 # Create table
-${MYSQL} -u ${database} -p${passwd} -h ${host} <<EOF 
+${MYSQL} -u ${database} -p${passwd} -h ${host} <<EOF >> ./Logs/logs/${current_year}_mysql.log 
 
 use stock;
 #CREATE TABLE IF NOT EXISTS ${table_annou}_${current_time}(
@@ -47,11 +48,11 @@ url                   VARCHAR(400)  COMMENT '公告的url地址'
 DEFAULT CHARSET=utf8;
 exit
 
-EOF
+EOF 
 
 if [ $? -eq 0 ]; then
-echo "Table created..." >> ./Logs/logs/${current_time}_mysql.log
-echo "Table name are ${table_annou}_${current_time} and ${table_inter}_${current_time}." >> ./Logs/logs/${current_time}_mysql.log
+echo "Table created..." >> ./Logs/logs/${current_year}_mysql.log
+echo "Table name is ${table_east_money}_${current_time}." >> ./Logs/logs/${current_year}_mysql.log
 else
-echo "Table create failed..." >> ./Logs/logs/${current_time}_mysql.log
+echo "Table create failed... ${current_time}" >> ./Logs/logs/${current_year}_mysql.log
 fi
