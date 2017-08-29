@@ -9,6 +9,8 @@ Created on  12/4/16 4:50 PM
 @File: scrapy_utils.py
 """
 
+import time
+
 import numpy as np
 import pymysql
 import requests
@@ -17,7 +19,7 @@ from bs4 import BeautifulSoup
 import constants as cons
 
 
-def conn_post(url, data=None, proxies=None):
+def conn_post(url, data=None, proxies=None, retry=10):
     """
     In order to solve JavaScript relate problem, use post function.
     :param url:
@@ -26,13 +28,17 @@ def conn_post(url, data=None, proxies=None):
     :return: bsObj
     """
     session = requests.Session()
-    headers = get_headers()
-    req = session.post(url, data, headers=headers)
-    bsObj = BeautifulSoup(req.text, "lxml")
-    return bsObj
+    for i in range(retry):
+        try:
+            headers = get_headers()
+            req = session.post(url, data, headers=headers)
+            bsObj = BeautifulSoup(req.text, "lxml")
+            return bsObj
+        except:
+            time.sleep(0.01)
 
 
-def conn_get(url, proxies=None):
+def conn_get(url, proxies=None, retry=10):
     """
     Use get function to connect the url.
     :param url:
@@ -40,10 +46,15 @@ def conn_get(url, proxies=None):
     :return: bsObj
     """
     session = requests.Session()
-    headers = get_headers()
-    req = session.get(url, headers=headers)
-    bsObj = BeautifulSoup(req.text, "lxml")
-    return bsObj
+    for i in range(retry):
+        try:
+            headers = get_headers()
+            req = session.get(url, headers=headers)
+            bsObj = BeautifulSoup(req.text, "lxml")
+            return bsObj
+        except:
+            time.sleep(0.01)
+            pass
 
 
 def get_headers():

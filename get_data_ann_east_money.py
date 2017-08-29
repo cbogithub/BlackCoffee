@@ -9,7 +9,6 @@ Create on 8/26/17 3:00 PM
 @File: get_data_ann_east_money
 """
 
-import datetime
 import os
 import sys
 import time
@@ -42,7 +41,6 @@ class GetAnnData:
         my_log = JobLogging(self.log_name, log_dir)
         my_log.set_level(log_lev)
         self.log = my_log.get_logger()
-        self.log.info("Get ann data of east money's log create success.")
 
     def info(self, url, retry=10):
         information = {u'SECURITYFULLNAME': [], u'NOTICETITLE': [], u'NOTICEDATE': [],

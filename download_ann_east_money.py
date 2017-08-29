@@ -87,9 +87,11 @@ class DownloadAnn:
                 result[title] = url + cons.SPLIT_ITEM5 + column_name
         return result
 
-    def download_it(self, info, retry=10):
+    def download_it(self, file_name, retry=30):
+        file_rename = re.sub("[:：/]", "_", file_name)
+        file_rename = re.sub("[\*]", "", file_rename)
         info_dict = self.iterator_of_data()
-        words = info_dict[info].split(cons.SPLIT_ITEM5)
+        words = info_dict[file_name].split(cons.SPLIT_ITEM5)
         url = words[0]
         col = words[1]
         whole_url = self.URL_SCHEME + "://" + self.URL_Net + url
@@ -97,17 +99,27 @@ class DownloadAnn:
         type_of_ann_path = os.path.join(self.an_pdf_data_path, re.sub("/", "_", col))
         if not os.path.exists(type_of_ann_path):
             os.mkdir(type_of_ann_path)
-        download_path = type_of_ann_path + "/" + re.sub("/", "_", info) + ".pdf"
+        download_path = type_of_ann_path + "/" + file_rename + ".pdf"
         for _ in range(retry):
+            time.sleep(0.01)
             try:
                 urlretrieve(pdf_url, download_path)
                 if os.path.getsize(download_path) / 1024 > 2.0:
-                    self.log.info("Downloaded {} successful...".format(info))
+                    self.log.info("Downloaded {} successful...".format(file_name))
                     break
+                else:
+                    if _ != retry - 1:
+                        self.log.info("Try it {} times again ---> {} ".format(_ + 2, file_name))
+                    else:
+                        self.log.info("{} download failed！\nSize to small!".format(file_name))
             except Exception as e:
-                self.log.info(e)
-                time.sleep(0.01)
-                pass
+                if _ != retry - 1:
+                    self.log.info(e)
+                    time.sleep(0.01)
+                    pass
+                else:
+                    self.log.info("{} download failed！".format(file_name))
+                    pass
 
 
 if __name__ == '__main__':
