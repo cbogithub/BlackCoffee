@@ -11,6 +11,7 @@ database="stock"
 table_annou="announcement"
 table_inter="interpretation"
 table_east_money="east_money_ann"
+research_report="sina_research_report"
 passwd="stock"
 host="localhost"
 
@@ -18,7 +19,7 @@ my_path=`dirname $PWD`
 cd $my_path
 
 # Create table
-${MYSQL} -u ${database} -p${passwd} -h ${host} <<EOF >> ./Logs/logs/${current_year}_mysql.log 
+${MYSQL} -u ${database} -p${passwd} -h ${host} <<EOF >> ./Logs/logs/${current_year}_mysql.log
 
 use stock;
 #CREATE TABLE IF NOT EXISTS ${table_annou}_${current_time}(
@@ -46,9 +47,21 @@ columnname            VARCHAR(50)   COMMENT '公告类型',
 url                   VARCHAR(400)  COMMENT '公告的url地址'
 ) COMMENT='表注释'
 DEFAULT CHARSET=utf8;
+
+CREATE TABLE ${research_report}_${current_year}(
+title                 VARCHAR(300)     COMMENT '研报标题',
+article_url           VARCHAR(300)     COMMENT '研报内容的url',
+type                  VARCHAR(100)     COMMENT '研报类型',
+publish_time          VARCHAR(10)      COMMENT '发布时间',
+institution           VARCHAR(100)     COMMENT '发布机构',
+author                VARCHAR(100)     COMMENT '作者',
+content               VARCHAR(5000)    COMMENT '研报内容'
+) COMMENT='表注释'
+DEFAULT CHARSET=utf8;
+
 exit
 
-EOF 
+EOF
 
 if [ $? -eq 0 ]; then
 echo "Table created..." >> ./Logs/logs/${current_year}_mysql.log

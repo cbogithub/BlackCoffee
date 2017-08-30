@@ -11,6 +11,7 @@ Create on 8/29/17 8:31 PM
 
 import datetime
 import os
+import re
 import sys
 import time
 from urllib.parse import urlparse
@@ -26,7 +27,7 @@ from Logs.JobLogging import JobLogging
 class News:
     # initial log
     def __init__(self, log_lev='INFO'):
-        self.contents = {}
+        self.contents = {"article_title": [], "article_text": []}
         self.URL = cons.RAW_URL_OF_ANN_EAST_MONEY
         self.URL_Net = urlparse(self.URL).netloc
         self.URL_SCHEME = urlparse(self.URL).scheme
@@ -67,37 +68,40 @@ class News:
                             break
                         elif len(article_text) != 0 and (_ == (retry - 1) and len(article_title) == 0):
                             article_title = item.url
-                    self.contents[article_title] = article_text
-                    self.log.info(
-                        u"{}--->{}".format(article_title, article_text))
+                    self.contents["article_title"].append(article_title)
+                    self.contents["article_text"].append(re.sub("[\n]", " ", article_text))
+                    self.log.info(u"{}--->{}".format(article_title, article_text))
                 self.log.info(u"There are {} news...".format(news_size))
                 self.log.info(u"-" * 100)
-                return self.contents
+                df = pd.DataFrame(self.contents, columns=['article_title', 'article_text'])
+                df['publish_time'] = time_now
+                return df
             else:
                 self.log.info(u"There is nothing to get...")
-                return self.contents
+                sys.exit()
         except Exception as e:
             self.log.info(u"Something go wrong: \n{}".format(e))
             pass
 
 
-def write_to_csv(dict_info, today_date, time_now):
-    data_dir = os.path.join(cons.FILE_ARCHIVE, today_date)
+def write_to_csv(df, today_date):
+    data_dir = os.path.join(cons.FILE_ARCHIVE, "news")
     if not os.path.exists(data_dir):
         os.mkdir(data_dir)
-    df = pd.DataFrame(dict_info, columns=['title', 'content'])
-    df['date'] = today_date
-    df['publish_time'] = time_now
-    df.to_csv(data_dir + "/" + today_date + ".csv", sep="|", mode="a")
+    df['filter'] = "-" * 100
+    df.to_csv(data_dir + "/" + today_date + ".csv", sep="\n", mode="a", header=False, index=False)
 
 
-def insert_to_mysql(lines, collect_time):
+def insert_to_mysql(lines):
     connection = s_utils.conn_mysql()
     try:
         with connection.cursor() as cursor:
-            for k, v in lines.items():
+            for index, row in lines.iterrows():
                 sql = cons.insert_news.format(cons.news_table_name)
-                cursor.execute(sql, (cons.today_str_Ymd, collect_time, k, v))
+                cursor.execute(sql, (cons.today_str_Ymd,
+                                     row['publish_time'],
+                                     row['article_title'],
+                                     row['article_text']))
         connection.commit()
     finally:
         connection.close()
@@ -108,6 +112,6 @@ if __name__ == '__main__':
     today_date = (datetime.datetime.now()).strftime("%Y%m%d")
     get_news = News()
     if current_time != u"23:50":
-        contents = get_news.get_content(current_time, retry=10)
+        contents = get_news.get_content(current_time)
         if len(contents) > 0:
-            write_to_csv(contents, today_date, current_time)
+            write_to_csv(contents, today_date)

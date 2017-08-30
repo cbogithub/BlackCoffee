@@ -43,6 +43,17 @@ noticedate            VARCHAR(10)   COMMENT '公告发布时间',
 securitytype          VARCHAR(10)   COMMENT '证券类型',
 columnname            VARCHAR(50)   COMMENT '公告类型',
 url                   VARCHAR(400)  COMMENT '公告的url地址'
-) COMMENT='表注释';
+) COMMENT='表注释'
+DEFAULT CHARSET=utf8;
 
+CREATE TABLE sina_research_report_2017(
+title                 VARCHAR(300)     COMMENT '研报标题',
+article_url           VARCHAR(300)     COMMENT '研报内容的url',
+type                  VARCHAR(100)     COMMENT '研报类型',
+publish_time          VARCHAR(10)      COMMENT '发布时间',
+institution           VARCHAR(100)     COMMENT '发布机构',
+author                VARCHAR(100)     COMMENT '作者',
+content               VARCHAR(5000)    COMMENT '研报内容'
+) COMMENT='表注释'
+DEFAULT CHARSET=utf8;
 -- trade_cal()
