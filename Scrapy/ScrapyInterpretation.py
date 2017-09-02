@@ -39,7 +39,7 @@ class ScrapyInterpretation:
         self.log_name = os.path.splitext(os.path.split(sys.argv[0])[1])[0]
         log_dir = cons.TASK_LOG_PATH
         self.today = date_today.strftime("%Y%m%d")
-        # log_dir += '/' + self.today
+        # log_dir += '/' + self.yesterday
         if not os.path.isdir(log_dir):
             try:
                 os.makedirs(log_dir)
@@ -137,7 +137,7 @@ class ScrapyInterpretation:
                                                                               row[u'content'].decode('utf-8'),
                                                                               row[u'pdf_url'], cons.inter_table_name))
             connection.commit()
-            self.log.info(u"Great job, you got {} rows information　today.".format(len(df)))
+            self.log.info(u"Great job, you got {} rows information　yesterday.".format(len(df)))
         finally:
             connection.close()
 

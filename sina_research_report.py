@@ -28,10 +28,10 @@ class SinaResearchReport:
         self.URL_Net = urlparse(self.URL).netloc
         self.URL_SCHEME = urlparse(self.URL).scheme
         self.log_name = os.path.splitext(os.path.split(sys.argv[0])[1])[0]
-        # self.today = (datetime.datetime.now()).strftime("%Y-%m-%d")
-        self.today = sys.argv[1]
+        # self.yesterday = (datetime.datetime.now()).strftime("%Y-%m-%d")
+        self.yesterday = sys.argv[1]
         self.page_num = 0
-        self.report_dir = os.path.join(cons.RESEARCH_REPORT_PATH, self.today)
+        self.report_dir = os.path.join(cons.RESEARCH_REPORT_PATH, self.yesterday)
         if not os.path.exists(self.report_dir):
             os.mkdir(self.report_dir)
         log_dir = cons.TASK_LOG_PATH
@@ -40,6 +40,7 @@ class SinaResearchReport:
         my_log = JobLogging(self.log_name, log_dir)
         my_log.set_level(log_lev)
         self.log = my_log.get_logger()
+        self.log.info("Download ann of east money's log create success.")
 
     def info(self):
         information = {"title": [],
@@ -50,7 +51,7 @@ class SinaResearchReport:
                        "author": [],
                        "content": []}
         for i in range(self._get_pages()):
-            bsObj = s_utils.conn_get(cons.SIAN_REPORT_URL + self.today + "&p=" + str(i))
+            bsObj = s_utils.conn_get(cons.SIAN_REPORT_URL + self.yesterday + "&p=" + str(i))
             contents = bsObj.find("div", {"class": "main"}).find("table").find_all("tr")[2:]
             for content in contents:
                 article = content.find_all("td")
@@ -59,7 +60,7 @@ class SinaResearchReport:
                 information["title"].append(article_info.attrs["title"].encode('latin1').decode('gb2312', 'ignore'))
                 information["article_url"].append(article_url)
                 information["type"].append(article[2].text.encode('latin1').decode('gb2312', 'ignore'))
-                information["publish_time"].append(self.today)
+                information["publish_time"].append(self.yesterday)
                 information["institution"].append(
                     article[4].find("a").find("div").find("span").text.encode('latin1').decode('gb2312', 'ignore'))
                 information["author"].append(
@@ -104,7 +105,7 @@ class SinaResearchReport:
             connection.close()
 
     def _get_pages(self):
-        bsObj = s_utils.conn_get(cons.SIAN_REPORT_URL + self.today)
+        bsObj = s_utils.conn_get(cons.SIAN_REPORT_URL + self.yesterday)
         page_num = \
             bsObj.find("div", {"class": "page"}).find("tr").find("td").find("div", {"class": "pagebox"}).find_all(
                 "span", {
@@ -117,13 +118,13 @@ class SinaResearchReport:
         connection = s_utils.conn_mysql()
         try:
             with connection.cursor() as cursor:
-                sql = cons.get_report_data.format(cons.research_report_table_name, self.today)
+                sql = cons.get_report_data.format(cons.research_report_table_name, self.yesterday)
                 x = cursor.execute(sql)
                 result = cursor.fetchmany(x)
                 types = {item['title'] +
-                         cons.SPLIT_ITEM5 +
+                         cons.SPLIT_ITEM7 +
                          item['type'] +
-                         cons.SPLIT_ITEM5 +
+                         cons.SPLIT_ITEM7 +
                          item['institution']: item['content'] for item in
                          result}
             return types
@@ -142,12 +143,29 @@ class SinaResearchReport:
         with open(report_path + "/" + re.sub("[/]", "_", lst[0]) + ".txt", encoding='utf-8', mode='a') as file:
             file.write(get_dict[headers])
 
+    def write2file_txt(self, df):
+        df.drop(["article_url", "publish_time", "author"], axis=1, inplace=1)
+        for t in df['type'].drop_duplicates():
+            report_path = os.path.join(cons.RESEARCH_REPORT_PATH, re.sub("[/]", "_", t))
+            if not os.path.exists(report_path):
+                try:
+                    os.mkdir(report_path)
+                except:
+                    pass
+            new_df = df[df['type'] == t]
+            new_df['filter'] = "-" * 100
+            new_df.to_csv(report_path + "/" + self.yesterday + ".csv", sep="\n", mode="a", header=False,
+                          index=False)
+
 
 if __name__ == '__main__':
     report = SinaResearchReport()
-    report.insert_mysql(report.info())
-    result_dict = report.get_article_type()
-    pool = ThreadPool(32)
-    pool.map(report.write2file, result_dict)
-    pool.close()
-    pool.join()
+    df = report.info()
+    report.insert_mysql(df)
+    report.write2file_txt(df)
+    # report.insert_mysql(report.info())
+    # result_dict = report.get_article_type()
+    # pool = ThreadPool(32)
+    # pool.map(report.write2file, result_dict)
+    # pool.close()
+    # pool.join()

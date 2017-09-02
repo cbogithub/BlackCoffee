@@ -31,7 +31,7 @@ class GetAnnData:
         self.log_name = os.path.splitext(os.path.split(sys.argv[0])[1])[0]
         self.today = sys.argv[1]
         self.page_num = 0
-        # self.today = '2017-08-26'
+        # self.yesterday = '2017-08-26'
         log_dir = cons.TASK_LOG_PATH
         if not os.path.isdir(log_dir):
             try:
@@ -65,7 +65,7 @@ class GetAnnData:
                     pass
                 else:
                     self.log.info(
-                        "today has no data.\nGoodbey!\n==========>No data day:{}<==========".format(self.today))
+                        "yesterday has no data.\nGoodbey!\n==========>No data day:{}<==========".format(self.today))
                     sys.exit()
         self.log.info("{} pages to get...".format(self.page_num))
         for page in range(self.page_num):
