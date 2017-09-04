@@ -106,7 +106,8 @@ class GetAnnData:
         connection = s_utils.conn_mysql()
         try:
             with connection.cursor() as cursor:
-                for index, row in df.iterrows():
+                # 倒序插入表中
+                for index, row in df[::-1].iterrows():
                     sql = cons.insert_east_money_ann_sql.format(cons.east_money_ann_table_name)
                     cursor.execute(sql, (row[u'SECURITYCODE'],
                                          row[u'SECURITYFULLNAME'],
