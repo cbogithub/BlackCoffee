@@ -76,3 +76,15 @@ def conn_mysql():
                                  charset='utf8',
                                  cursorclass=pymysql.cursors.DictCursor)
     return connection
+
+
+def get_first_info(execute_sql, table_name, column_name):
+    connection = conn_mysql()
+    try:
+        with connection.cursor() as cursor:
+            sql = execute_sql.format(table_name)
+            x = cursor.execute(sql)
+            result = cursor.fetchone(x)
+        return result[column_name]
+    finally:
+        connection.close()
