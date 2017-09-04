@@ -124,18 +124,6 @@ class RealTimeAnn:
         finally:
             connection.close()
 
-    def _get_first_info(self):
-        connection = s_utils.conn_mysql()
-        try:
-            with connection.cursor() as cursor:
-                sql = cons.east_get_first_info.format(cons.east_money_ann_table_name)
-                x = cursor.execute(sql)
-                result = cursor.fetchone(x)
-            self.log.info("Get the latest data '{}'".format(result))
-            return result['raw_url']
-        finally:
-            connection.close()
-
     def get_data(self, df):
         return [item['NOTICETITLE'] +
                 cons.SPLIT_ITEM5 +
