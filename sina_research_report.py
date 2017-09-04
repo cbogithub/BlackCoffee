@@ -28,7 +28,7 @@ class SinaResearchReport:
         self.URL_Net = urlparse(self.URL).netloc
         self.URL_SCHEME = urlparse(self.URL).scheme
         self.log_name = os.path.splitext(os.path.split(sys.argv[0])[1])[0]
-        # self.yesterday = (datetime.datetime.now()).strftime("%Y-%m-%d")
+        # self.today = (datetime.datetime.now()).strftime("%Y-%m-%d")
         self.yesterday = sys.argv[1]
         self.page_num = 0
         self.report_dir = os.path.join(cons.RESEARCH_REPORT_PATH, self.yesterday)
@@ -104,15 +104,26 @@ class SinaResearchReport:
         finally:
             connection.close()
 
-    def _get_pages(self):
+    def _get_pages(self, retry=3):
         bsObj = s_utils.conn_get(cons.SIAN_REPORT_URL + self.yesterday)
-        page_num = \
-            bsObj.find("div", {"class": "page"}).find("tr").find("td").find("div", {"class": "pagebox"}).find_all(
-                "span", {
-                    "class": "pagebox_next"})[-1].find("a").attrs["onclick"]
-        page_num = re.search("(\d+)", page_num)
-        page_num = page_num.group()
-        return int(page_num)
+        for i in range(retry):
+            try:
+                page_num = \
+                    bsObj.find("div", {"class": "page"}).find("tr").find("td").find("div",
+                                                                                    {"class": "pagebox"}).find_all(
+                        "span", {
+                            "class": "pagebox_next"})[-1].find("a").attrs["onclick"]
+                page_num = re.search("(\d+)", page_num)
+                page_num = page_num.group()
+                return int(page_num)
+            except Exception as e:
+                if i != retry - 1:
+                    self.log.info(e)
+                    pass
+                else:
+                    self.log.info(
+                        "yesterday has no data.\nGoodbey!\n==========>No data day:{}<==========".format(self.yesterday))
+                    sys.exit()
 
     def get_article_type(self):
         connection = s_utils.conn_mysql()
@@ -155,7 +166,7 @@ class SinaResearchReport:
             new_df = df[df['type'] == t]
             new_df['filter'] = "-" * 100
             new_df.to_csv(report_path + "/" + self.yesterday + ".csv", sep="\n", mode="a", header=False,
-                          index=False)
+                          index=False, encoding='utf-8')
 
 
 if __name__ == '__main__':
