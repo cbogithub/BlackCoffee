@@ -49,13 +49,15 @@ PRIMARY KEY (id)
 DEFAULT CHARSET=utf8;
 
 CREATE TABLE sina_research_report_2017(
+id MEDIUMINT NOT NULL AUTO_INCREMENT,
 title                 VARCHAR(300)     COMMENT '研报标题',
 article_url           VARCHAR(300)     COMMENT '研报内容的url',
 type                  VARCHAR(100)     COMMENT '研报类型',
 publish_time          VARCHAR(10)      COMMENT '发布时间',
 institution           VARCHAR(100)     COMMENT '发布机构',
 author                VARCHAR(100)     COMMENT '作者',
-content               VARCHAR(5000)    COMMENT '研报内容'
+content               VARCHAR(5000)    COMMENT '研报内容',
+PRIMARY KEY (id)
 ) COMMENT='表注释'
 DEFAULT CHARSET=utf8;
 -- trade_cal()

@@ -19,9 +19,10 @@ my_path=`dirname $PWD`
 cd $my_path
 
 # Create table
-${MYSQL} -u ${database} -p${passwd} -h ${host} <<EOF >> ./Logs/logs/${current_year}_mysql.log
+${MYSQL} -u ${database} -p${passwd} -h ${host} <<EOF
 
 use stock;
+
 #CREATE TABLE IF NOT EXISTS ${table_annou}_${current_time}(
 #publish_time    CHAR(10),
 #code            CHAR(6),
@@ -37,25 +38,29 @@ use stock;
 #pdf_url         VARCHAR(500)
 #) DEFAULT CHARSET=utf8;
 
-CREATE TABLE ${table_east_money}_${current_time}(
+CREATE TABLE ${table_east_money}_${current_year}(
+id MEDIUMINT NOT NULL AUTO_INCREMENT,
 securitycode          VARCHAR(6)    COMMENT '证券代码',
 securityfullname      VARCHAR(30)   COMMENT '证券的全名称',
 noticetitle           VARCHAR(200)  COMMENT '公告的标题',
 noticedate            VARCHAR(10)   COMMENT '公告发布时间',
 securitytype          VARCHAR(10)   COMMENT '证券类型',
 columnname            VARCHAR(50)   COMMENT '公告类型',
-url                   VARCHAR(400)  COMMENT '公告的url地址'
+url                   VARCHAR(400)  COMMENT '公告的url地址',
+PRIMARY KEY (id)
 ) COMMENT='表注释'
 DEFAULT CHARSET=utf8;
 
 CREATE TABLE ${research_report}_${current_year}(
+id MEDIUMINT NOT NULL AUTO_INCREMENT,
 title                 VARCHAR(300)     COMMENT '研报标题',
 article_url           VARCHAR(300)     COMMENT '研报内容的url',
 type                  VARCHAR(100)     COMMENT '研报类型',
 publish_time          VARCHAR(10)      COMMENT '发布时间',
 institution           VARCHAR(100)     COMMENT '发布机构',
 author                VARCHAR(100)     COMMENT '作者',
-content               VARCHAR(5000)    COMMENT '研报内容'
+content               VARCHAR(5000)    COMMENT '研报内容',
+PRIMARY KEY (id)
 ) COMMENT='表注释'
 DEFAULT CHARSET=utf8;
 
@@ -64,8 +69,8 @@ exit
 EOF
 
 if [ $? -eq 0 ]; then
-echo "Table created..." >> ./Logs/logs/${current_year}_mysql.log
-echo "Table name is ${table_east_money}_${current_time}." >> ./Logs/logs/${current_year}_mysql.log
+    echo "Table created..." >> ./Logs/logs/mysql.log
+    echo "Table name is ${table_east_money}_${current_time}." >> ./Logs/logs/mysql.log
 else
-echo "Table create failed... ${current_time}" >> ./Logs/logs/${current_year}_mysql.log
+    echo "Table create failed... ${current_time}" >> ./Logs/logs/mysql.log
 fi
