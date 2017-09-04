@@ -35,14 +35,16 @@ title           VARCHAR(200),
 content         VARCHAR(5000)
 );
 
-CREATE TABLE east_money_ann_201708(
+CREATE TABLE east_money_ann_2017(
+id MEDIUMINT NOT NULL AUTO_INCREMENT,
 securitycode          VARCHAR(6)    COMMENT '证券代码',
 securityfullname      VARCHAR(30)   COMMENT '证券的全名称',
 noticetitle           VARCHAR(200)  COMMENT '公告的标题',
 noticedate            VARCHAR(10)   COMMENT '公告发布时间',
 securitytype          VARCHAR(10)   COMMENT '证券类型',
 columnname            VARCHAR(50)   COMMENT '公告类型',
-url                   VARCHAR(400)  COMMENT '公告的url地址'
+url                   VARCHAR(400)  COMMENT '公告的url地址',
+PRIMARY KEY (id)
 ) COMMENT='表注释'
 DEFAULT CHARSET=utf8;
 
@@ -57,3 +59,6 @@ content               VARCHAR(5000)    COMMENT '研报内容'
 ) COMMENT='表注释'
 DEFAULT CHARSET=utf8;
 -- trade_cal()
+
+-- 添加列和主键
+ALTER TABLE east_money_ann_2017 ADD id INT [UNSIGNED] NOT NULL AUTO_INCREMENT PRIMARY KEY;
