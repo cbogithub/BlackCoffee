@@ -51,6 +51,8 @@ class RealTimeSinaReport:
                        "institution": [],
                        "author": [],
                        "content": []}
+        first_record = s_utils.get_first_info(cons.get_first_sina_report, cons.research_report_table_name,
+                                              column_name='article_url')
         page = 1
         while True:
             bsObj = s_utils.conn_get(cons.SIAN_REPORT_URL + self.today + "&p=" + str(page))
@@ -59,8 +61,7 @@ class RealTimeSinaReport:
                 article = content.find_all("td")
                 article_info = article[1].find("a")
                 article_url = article_info.attrs["href"]
-                if article_url != s_utils.get_first_info(cons.get_first_sina_report, cons.research_report_table_name,
-                                                         column_name='article_url'):
+                if article_url != first_record:
                     information["title"].append(article_info.attrs["title"].encode('latin1').decode('gb2312', 'ignore'))
                     information["article_url"].append(article_url)
                     information["type"].append(article[2].text.encode('latin1').decode('gb2312', 'ignore'))

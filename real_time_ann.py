@@ -46,9 +46,16 @@ class RealTimeAnn:
         self.log.info("Real time ann's log create success.")
 
     def info(self, retry=10):
-        information = {u'SECURITYFULLNAME': [], u'NOTICETITLE': [], u'NOTICEDATE': [],
-                       u'SECURITYCODE': [], u'SECURITYTYPE': [],
-                       u'COLUMNNAME': [], u'URL': []}
+        information = {u'SECURITYFULLNAME': [],
+                       u'NOTICETITLE': [],
+                       u'NOTICEDATE': [],
+                       u'SECURITYCODE': [],
+                       u'SECURITYTYPE': [],
+                       u'COLUMNNAME': [],
+                       u'URL': []}
+        first_record = s_utils.get_first_info(execute_sql=cons.east_get_first_info,
+                                              table_name=cons.east_money_ann_table_name,
+                                              column_name='raw_url')
         driver = e_utils.simulate_web()
         for i in range(retry):
             time.sleep(0.01)
@@ -63,9 +70,7 @@ class RealTimeAnn:
                 lines = item.find_all('td')
                 content_url = lines[3].find("a").attrs['href']
                 # 比较信息是否相同
-                if content_url != s_utils.get_first_info(execute_sql=cons.east_get_first_info,
-                                                         table_name=cons.east_money_ann_table_name,
-                                                         column_name='raw_url'):
+                if content_url != first_record:
                     information[u'SECURITYCODE'].append(lines[0].text)
                     information[u'SECURITYFULLNAME'].append(lines[1].text)
                     information[u'NOTICETITLE'].append(lines[3].text)
