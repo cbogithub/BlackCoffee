@@ -13,6 +13,7 @@ import re
 import constants as cons
 from selenium import webdriver
 from bs4 import BeautifulSoup
+from pyvirtualdisplay import Display
 
 
 # 对json进行正则匹配
@@ -52,6 +53,8 @@ def mk_dict(tuples):
 
 
 def simulate_web():
+    display = Display(visible=0, size=(800, 600))
+    display.start()
     driver = webdriver.Chrome(cons.CHROME_PATH)
     return driver
 
