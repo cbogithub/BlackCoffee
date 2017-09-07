@@ -89,7 +89,7 @@ def write_to_csv(df, today_date):
     if not os.path.exists(data_dir):
         os.mkdir(data_dir)
     df['filter'] = "-" * 100
-    df.to_csv(data_dir + "/" + today_date + ".csv", sep="\n", mode="a", header=False, index=False)
+    df.to_csv(data_dir + "/" + today_date + ".csv", sep="\n", mode="a", header=False, encoding='utf-8', index=False)
 
 
 def insert_to_mysql(lines):
