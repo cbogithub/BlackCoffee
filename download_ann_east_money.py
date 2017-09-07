@@ -73,24 +73,23 @@ class DownloadAnn:
                 pass
 
     def download_it(self, lst_item, retry=30):
-        lst_item = re.sub("[:：/]", "_", lst_item)
-        lst_item = re.sub("[\*]", "", lst_item)
+        lst_item = re.sub("[*]", "", lst_item)
         words = lst_item.split(cons.SPLIT_ITEM5)
         file_name = words[0]
         url = words[1]
         col = words[2]
         whole_url = self.URL_SCHEME + "://" + self.URL_Net + url
         pdf_url = self._url_for_pdf(whole_url)
-        type_of_ann_path = os.path.join(self.an_pdf_data_path, re.sub("/", "_", col))
+        type_of_ann_path = os.path.join(self.an_pdf_data_path, re.sub("[:：/]", "_", col))
         if not os.path.exists(type_of_ann_path):
             os.mkdir(type_of_ann_path)
-        download_path = type_of_ann_path + "/" + str(file_name) + ".pdf"
+        download_path = type_of_ann_path + "/" + str(re.sub("[:：/]", "_", file_name)) + ".pdf"
         for _ in range(retry):
             time.sleep(0.01)
             try:
                 urlretrieve(pdf_url, download_path)
                 if os.path.getsize(download_path) / 1024 > 2.0:
-                    self.log.info("Downloaded {} successful...".format(lst_item))
+                    self.log.info("Downloaded {} successful...".format(file_name))
                     break
                 else:
                     if _ != retry - 1:
