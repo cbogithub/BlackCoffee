@@ -10,6 +10,7 @@ Created on  12/4/16 4:50 PM
 """
 
 import time
+import os
 
 import numpy as np
 import pymysql
@@ -88,3 +89,13 @@ def get_first_info(execute_sql, table_name, column_name):
         return result[column_name]
     finally:
         connection.close()
+
+
+def confirm_path(son, parent):
+    path = os.path.join(son, parent)
+    if not os.path.exists(path):
+        try:
+            os.mkdir(path)
+        except:
+            pass
+    return path
