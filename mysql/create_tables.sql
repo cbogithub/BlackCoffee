@@ -56,7 +56,7 @@ type                  VARCHAR(100)     COMMENT '研报类型',
 publish_time          VARCHAR(10)      COMMENT '发布时间',
 institution           VARCHAR(100)     COMMENT '发布机构',
 author                VARCHAR(100)     COMMENT '作者',
-content               VARCHAR(10000)    COMMENT '研报内容',
+content               VARCHAR(20000)    COMMENT '研报内容',
 PRIMARY KEY (id)
 ) COMMENT='表注释'
 DEFAULT CHARSET=utf8;
