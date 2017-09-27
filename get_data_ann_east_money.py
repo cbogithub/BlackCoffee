@@ -41,6 +41,7 @@ class GetAnnData:
         my_log = JobLogging(self.log_name, log_dir)
         my_log.set_level(log_lev)
         self.log = my_log.get_logger()
+        self.log.info("Today is {}.".format(self.today))
 
     def info(self, url, retry=10):
         information = {u'SECURITYFULLNAME': [], u'NOTICETITLE': [], u'NOTICEDATE': [],
@@ -65,10 +66,10 @@ class GetAnnData:
                     pass
                 else:
                     self.log.info(
-                        "yesterday has no data.\nGoodbey!\n==========>No data day:{}<==========".format(self.today))
+                        "Yesterday has no data.\nGoodbey!\n==========>No data day:{}<==========".format(self.today))
                     sys.exit()
         self.log.info("{} pages to get...".format(self.page_num))
-        for page in range(self.page_num):
+        for page in range(1, self.page_num + 1):
             for item in e_utils.get_contents(driver):
                 lines = item.find_all('td')
                 information[u'SECURITYCODE'].append(lines[0].text)
@@ -85,9 +86,10 @@ class GetAnnData:
                     break
                 except Exception as e:
                     self.log.info(e)
-                    time.sleep(3)
+                    self.log.info("Try once again...")
+                    time.sleep(5)
                     pass
-            self.log.info("the {} page scrapy successful..".format(page + 1))
+            self.log.info("the {} page scrapy successful..".format(page))
         driver.close()
         df = pd.DataFrame(information,
                           columns=[u'SECURITYCODE',
@@ -98,7 +100,9 @@ class GetAnnData:
                                    u'COLUMNNAME',
                                    u'URL'])
         df.drop_duplicates(inplace=True)
-        df.index = range(len(df))
+        length = len(df)
+        df.index = range(length)
+        self.log.info("Today, {} of the data...".format(length))
         return df
 
     # Use mysql to store information of stock which is crawled by some websites.
