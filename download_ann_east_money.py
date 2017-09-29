@@ -78,8 +78,7 @@ class DownloadAnn:
         file_name = words[0]
         url = words[1]
         col = words[2]
-        whole_url = self.URL_SCHEME + "://" + self.URL_Net + url
-        pdf_url = self._url_for_pdf(whole_url)
+        pdf_url = self._url_for_pdf(url)
         type_of_ann_path = os.path.join(self.an_pdf_data_path, re.sub("[:：/]", "_", col))
         if not os.path.exists(type_of_ann_path):
             os.mkdir(type_of_ann_path)
