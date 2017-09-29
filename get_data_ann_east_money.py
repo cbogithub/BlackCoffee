@@ -78,7 +78,7 @@ class GetAnnData:
                 information[u'COLUMNNAME'].append(lines[4].text)
                 information[u'NOTICEDATE'].append(self.today)
                 information[u'SECURITYTYPE'].append(cons.SECURITYTYPE1)
-                information[u'URL'].append(lines[3].find("a").attrs['href'])
+                information[u'URL'].append(self.URL_SCHEME + "://" + self.URL_Net + lines[3].find("a").attrs['href'])
             time.sleep(3)
             for i in range(retry):
                 try:
