@@ -17,6 +17,8 @@ from multiprocessing.dummy import Pool as ThreadPool
 from urllib.parse import urlparse
 from urllib.request import urlretrieve
 
+import numpy as np
+
 import Utils.scrapy_utils as s_utils
 import constants as cons
 from Logs.JobLogging import JobLogging
@@ -86,6 +88,44 @@ class DownloadAnn:
         for _ in range(retry):
             time.sleep(0.01)
             try:
+                urlretrieve(pdf_url, download_path)
+                if os.path.getsize(download_path) / 1024 > 2.0:
+                    self.log.info("Downloaded {} successful...".format(file_name))
+                    break
+                else:
+                    if _ != retry - 1:
+                        self.log.info("Try it {} times again ---> {} ".format(_ + 2, lst_item))
+                    else:
+                        self.log.info("{} download failed！\nSize to small!".format(lst_item))
+            except OSError as exc:
+                if exc.errno == 36:
+                    self.handle_file_too_long(exc, type_of_ann_path, file_name, pdf_url, lst_item)
+                    break
+                else:
+                    if _ != retry - 1:
+                        self.log.info(exc)
+                        time.sleep(0.01)
+                        pass
+                    else:
+                        self.log.info("{} download failed！".format(lst_item))
+                        pass
+            except Exception as e:
+                if _ != retry - 1:
+                    self.log.info(e)
+                    time.sleep(0.01)
+                    pass
+                else:
+                    self.log.info("{} download failed！".format(lst_item))
+                    pass
+
+    def handle_file_too_long(self, exc, type_of_ann_path, file_name, pdf_url, lst_item, retry=5):
+        self.log.info(exc)
+        self.log.info("Try once again use another method...")
+        for _ in range(retry):
+            time.sleep(0.01)
+            try:
+                download_path = type_of_ann_path + "/" + str(
+                    re.sub("[:：/]", "_", file_name[:len(file_name) // 2])) + str(np.random.randint(100)) + ".pdf"
                 urlretrieve(pdf_url, download_path)
                 if os.path.getsize(download_path) / 1024 > 2.0:
                     self.log.info("Downloaded {} successful...".format(file_name))
