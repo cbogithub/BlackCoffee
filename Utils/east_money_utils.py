@@ -52,6 +52,11 @@ def mk_dict(tuples):
         yield line
 
 
+def simulate_web_with_display():
+    driver = webdriver.Chrome(cons.CHROME_PATH)
+    return driver
+
+
 def simulate_web():
     display = Display(visible=0, size=(800, 600))
     display.start()
@@ -68,6 +73,14 @@ def _get_bsObj(driver):
 def get_contents(driver):
     bsObj = _get_bsObj(driver=driver)
     contents = bsObj.find_all("tr")
+    for line in contents:
+        yield line
+
+
+def get_jd_products(driver):
+    raw_html = driver.find_elements_by_class_name("mc")[1]
+    bsObj = BeautifulSoup(raw_html.get_attribute('innerHTML'), 'lxml')
+    contents = bsObj.find_all('div', {'class': 'product-box'})
     for line in contents:
         yield line
 
