@@ -59,7 +59,7 @@ class GetAnnData:
         for i in range(retry):
             try:
                 self.page_num = int(driver.find_element_by_xpath(cons.EAST_MONEY_LAST_PAGE).text)
-                # self.page_num = 6
+                #self.page_num = 6
                 break
             except Exception as e:
                 if i != retry - 1:
